@@ -17,7 +17,7 @@ class UserRepositoryTest {
     UserRepository userRepository;
 
     @Test
-    public void BaseTimeEntity_등록() {
+    public void BaseTimeEntity_등록() { // TODO DB 연결도 안했는데 왜 테스트가 성공하지...?
         // Given
         LocalDateTime now = LocalDateTime.of(2019,6,4,0,0,0);
         userRepository.save(
