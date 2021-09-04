@@ -37,4 +37,10 @@ class UserRepositoryTest {
         System.out.println("user.ModifiedAt = " + user.getModifiedAt());
         System.out.println("user.CreatedAt = " + user.getCreatedAt());
     }
+
+    @Test
+    public void kakao_id_는_unique_해야_한다() {
+
+    }
+
 }
