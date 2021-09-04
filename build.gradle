@@ -16,6 +16,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    jcenter() // deprecated 된다고 하는데.. spring fox 문서에는 아직도 이걸 쓴다... 안습
 }
 
 dependencies {
