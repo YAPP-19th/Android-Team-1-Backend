@@ -22,6 +22,9 @@ public class User extends BaseTimeEntity {
     @Column(length = 100, nullable = false, unique = true)
     private String kakaoId;
 
+    @Column(columnDefinition = "TEXT")
+    private String email;
+
     @Builder
     public User(String nickName, String kakaoId) {
         this.nickName = nickName;
