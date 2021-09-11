@@ -25,9 +25,8 @@ public class Party extends BaseTimeEntity {
 
     @Column
     private Point coordinate;
-    // TODO: setter 를 override 해서 double 2개를 받아서 point 하나가 set 되도록 할 수 있을까? hybrid property 처럼
 
-    // TODO: enum state 만들기
+    // TODO: enum status 만들기
 
     @Builder
     public Party(Point coordinate, String title, String body) {
