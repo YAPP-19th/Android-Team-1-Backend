@@ -19,7 +19,7 @@ class UserRepositoryTest {
     UserRepository userRepository;
 
     @Test
-    public void user_등록() { // TODO DB 연결도 안했는데 왜 테스트가 성공하지...?
+    public void user_등록() {
         // Given
         String nickName = "테스트 닉네임";
         String kakaoId = "테스트-카카오-id";
