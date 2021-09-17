@@ -38,4 +38,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: mysql -u root -p -e "SELECT NOW();"
+        run: mysql -u root -e "SELECT NOW();"
