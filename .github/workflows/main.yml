@@ -25,7 +25,6 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_USER: root
-          MYSQL_ROOT_PASSWORD: 22380476
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_DATABASE: delibuddy
         ports:
