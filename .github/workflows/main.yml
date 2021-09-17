@@ -52,4 +52,5 @@ jobs:
 
 
       - name: cat log
+        if: ${{ always() }}
         run: cat ~/home/runner/work/Android-Team-1-Backend/Android-Team-1-Backend/build/reports/tests/test/classes/com.example.delibuddy.domain.user.UserRepositoryTest.html
