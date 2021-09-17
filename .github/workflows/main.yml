@@ -19,18 +19,11 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-  
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_USER: root
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: delibuddy
-        ports:
-          - 3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
+    env:
+      DB_DATABASE: delibuddy
+      DB_USER: root
+      DB_PASSWORD: root
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -39,4 +32,8 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: mysql -u root -p -h 127.0.0.1 -e "SELECT NOW();"
+        run: |
+          sudo /etc/init.d/mysql start
+          mysql -e 'SELECT NOW();' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+
+
