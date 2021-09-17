@@ -35,7 +35,7 @@ jobs:
       - name: Start Mysql
         run: |
           sudo systemctl start mysql
-          mysqladmin -u root -p root '22380476' -h 127.0.0.1
+          mysql -e 'UPDATE user set authentication_string=password('22380476') where user='root';' -u${{ env.DB_USER }} -proot
           mysql -e 'SELECT NOW();' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
       # Set up JDK 1.8
