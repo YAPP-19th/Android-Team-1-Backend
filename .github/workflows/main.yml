@@ -23,7 +23,7 @@ jobs:
     env:
       DB_DATABASE: delibuddy
       DB_USER: root
-      DB_PASSWORD: root
+      DB_PASSWORD: 22380476
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -35,6 +35,7 @@ jobs:
       - name: Start Mysql
         run: |
           sudo systemctl start mysql
+          mysqladmin -u root -p root '22380476'
           mysql -e 'SELECT NOW();' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
       # Set up JDK 1.8
