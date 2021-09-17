@@ -49,3 +49,7 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
+
+
+      - name: cat log
+        run: cat ~/home/runner/work/Android-Team-1-Backend/Android-Team-1-Backend/build/reports/tests/test/classes/com.example.delibuddy.domain.user.UserRepositoryTest.html
