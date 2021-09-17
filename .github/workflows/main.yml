@@ -33,7 +33,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: |
-          sudo /etc/init.d/mysql start
+          sudo systemctl start mysql
           mysql -e 'SELECT NOW();' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
 
