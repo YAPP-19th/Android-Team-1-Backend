@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/delibuddy?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: 22380476
+  jpa:
+    hibernate.ddl-auto: create
+    generate-ddl: true
+    database: mysql
+    properties:
+      hibernate.dialect: org.hibernate.spatial.dialect.mysql.MySQL56SpatialDialect
+
+logging:
+  level:
+   org:
+    hibernate:
+      SQL: debug
+      type: trace
+
+# TODO 자신이 설정한 application.yml 의 설정이 제대로 spring 에 인식이 되었는지 확인하는 방법을 찾을 것
