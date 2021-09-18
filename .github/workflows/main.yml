@@ -36,20 +36,21 @@ jobs:
         run: |
           sudo systemctl start mysql
           mysql -e "use mysql; FLUSH PRIVILEGES; ALTER USER 'root'@'localhost' IDENTIFIED BY '22380476';" -u${{ env.DB_USER }} -proot
-          mysql -e 'SELECT NOW();' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+          mysql -e 'CREATE DATABASE delibuddy;' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
       # Set up JDK 1.8
       - name: Set up JDK 1.8
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+#      - name: Setup tmate session
+#        uses: mxschmitt/action-tmate@v3
 
       # Gradle build
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
-
 
       - name: cat log
         if: ${{ always() }}
