@@ -8,6 +8,8 @@ spring:
     hibernate.ddl-auto: create
     generate-ddl: true
     database: mysql
+    properties:
+      hibernate.dialect: org.hibernate.spatial.dialect.mysql.MySQL56SpatialDialect
 
 logging:
   level:
