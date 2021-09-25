@@ -1,4 +1,4 @@
-package com.example.delibuddy.web.dto;
+package com.example.delibuddy.web.health;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
