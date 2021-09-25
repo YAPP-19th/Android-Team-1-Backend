@@ -18,4 +18,6 @@ logging:
       SQL: debug
       type: trace
 
-# TODO 자신이 설정한 application.yml 의 설정이 제대로 spring 에 인식이 되었는지 확인하는 방법을 찾을 것
+api:
+  v1: /api/v1
+
