@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.delibuddy.util.GeoHelper.wktToGeometry;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -61,14 +62,11 @@ class PartyRepositoryTest {
     public void findPartiesInGeom_작동_테스트() throws ParseException {
         Party party1 = createPartyWithPointString("POINT (1 1)");
         Party party2 = createPartyWithPointString("POINT (1 2)");
-        Party party3 = createPartyWithPointString("POINT (3 4)");
-        Party party4 = createPartyWithPointString("POINT (5 6)");
+        createPartyWithPointString("POINT (3 4)");
+        createPartyWithPointString("POINT (5 6)");
 
         List<Party> parties = partyRepository.findPartiesInGeom("Polygon((0 0, 0 3, 3 3, 3 0, 0 0))");
-        assertTrue(parties.contains(party1));
-        assertTrue(parties.contains(party2));
-        assertFalse(parties.contains(party3));
-        assertFalse(parties.contains(party4));
+        assertThat(parties).containsOnly(party1, party2);
     }
 
     @Test
