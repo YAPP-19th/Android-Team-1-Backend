@@ -22,9 +22,17 @@ class PartyRepositoryTest {
     @Autowired
     PartyRepository partyRepository;
 
-    private Party createPartyWithPointString(String pointString) throws ParseException {
+    private Party createPartyWithPointString(String pointString){
+        Point point;
+        try {
+            point = (Point) wktToGeometry(pointString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+
         Party party = Party.builder()
-                .coordinate((Point) wktToGeometry(pointString))
+                .coordinate(point)
                 .title("test title")
                 .body("")
                 .build();
@@ -33,7 +41,7 @@ class PartyRepositoryTest {
     }
 
     @Test
-    public void 파티_등록() throws ParseException {
+    public void 파티_등록() {
         // Given
         String pointString = "POINT (127.02558 37.3016)";
         createPartyWithPointString(pointString);
@@ -47,7 +55,7 @@ class PartyRepositoryTest {
     }
 
     @Test
-    public void findPartiesNear_작동_테스트() throws ParseException {
+    public void findPartiesNear_작동_테스트() {
         Party party1 = createPartyWithPointString("POINT (1 1)");
         createPartyWithPointString("POINT (1 2)");
         createPartyWithPointString("POINT (3 4)");
@@ -59,7 +67,7 @@ class PartyRepositoryTest {
     }
 
     @Test
-    public void findPartiesInGeom_작동_테스트() throws ParseException {
+    public void findPartiesInGeom_작동_테스트() {
         Party party1 = createPartyWithPointString("POINT (1 1)");
         Party party2 = createPartyWithPointString("POINT (1 2)");
         createPartyWithPointString("POINT (3 4)");
@@ -70,7 +78,7 @@ class PartyRepositoryTest {
     }
 
     @Test
-    public void 선릉역_주변의_2km_를_탐색하면_선릉역과_역삼역이_나온다() throws ParseException  {
+    public void 선릉역_주변의_2km_를_탐색하면_선릉역과_역삼역이_나온다() {
         // Given: 선릉 역삼 마두
         String 선릉_point = "POINT (127.048995 37.504506)";
         Party 선릉 = createPartyWithPointString(선릉_point);
