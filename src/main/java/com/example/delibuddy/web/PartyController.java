@@ -2,6 +2,7 @@ package com.example.delibuddy.web;
 
 import com.example.delibuddy.service.PartyService;
 import com.example.delibuddy.web.dto.OkayDto;
+import com.example.delibuddy.web.dto.PartyCreationRequestDto;
 import com.example.delibuddy.web.dto.PartyResponseDto;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,8 @@ public class PartyController {
     private final PartyService partyService;
 
     @PostMapping("${api.v1}/parties")
-    public PartyResponseDto createParty() {
-        return new PartyResponseDto(1L, "", "");
+    public PartyResponseDto createParty(@RequestBody PartyCreationRequestDto requestDto) {
+        return partyService.create(requestDto);
     }
 
     @PutMapping("${api.v1}/parties/{id}")

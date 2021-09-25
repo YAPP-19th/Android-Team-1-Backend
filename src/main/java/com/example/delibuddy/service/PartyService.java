@@ -32,8 +32,10 @@ public class PartyService {
     }
 
     @Transactional
-    public void create(PartyCreationRequestDto dto) {
-
+    public PartyResponseDto create(PartyCreationRequestDto dto) {
+        Party party = dto.toEntity();
+        partyRepository.save(party);
+        return new PartyResponseDto(party);
     }
 
     @Transactional
