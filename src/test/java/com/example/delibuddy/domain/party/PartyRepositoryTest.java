@@ -21,7 +21,7 @@ class PartyRepositoryTest {
     @Autowired
     PartyRepository partyRepository;
 
-    public Party createPartyWithPointString(String pointString) throws ParseException {
+    private Party createPartyWithPointString(String pointString) throws ParseException {
         Party party = Party.builder()
                 .coordinate((Point) wktToGeometry(pointString))
                 .title("test title")
@@ -55,6 +55,20 @@ class PartyRepositoryTest {
         List<Party> parties = partyRepository.findPartiesNear("POINT (1 1)", 2000);
         assertEquals(parties.size(), 1);
         assertEquals(parties.get(0).getId(), party1.getId());
+    }
+
+    @Test
+    public void findPartiesInGeom_작동_테스트() throws ParseException {
+        Party party1 = createPartyWithPointString("POINT (1 1)");
+        Party party2 = createPartyWithPointString("POINT (1 2)");
+        Party party3 = createPartyWithPointString("POINT (3 4)");
+        Party party4 = createPartyWithPointString("POINT (5 6)");
+
+        List<Party> parties = partyRepository.findPartiesInGeom("Polygon((0 0, 0 3, 3 3, 3 0, 0 0))");
+        assertTrue(parties.contains(party1));
+        assertTrue(parties.contains(party2));
+        assertFalse(parties.contains(party3));
+        assertFalse(parties.contains(party4));
     }
 
     @Test
