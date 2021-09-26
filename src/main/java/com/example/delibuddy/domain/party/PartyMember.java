@@ -6,7 +6,15 @@ import com.example.delibuddy.domain.user.User;
 import javax.persistence.*;
 
 @Entity
-public class PartyMember extends BaseTimeEntity {
+@Table(
+        name="party_members",
+        uniqueConstraints={
+                @UniqueConstraint(
+                        columnNames={"user_id","party_id"}
+                )
+        }
+)
+public class PartyMember extends BaseTimeEntity { // TODO 얘는 왜 테이블에 s 가 붙지...?
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
