@@ -23,7 +23,7 @@ public class PartyController {
     }
 
     @PutMapping("${api.v1}/parties/{id}")
-    public PartyResponseDto editParty(@RequestParam Long id) {
+    public PartyResponseDto editParty(@RequestBody PartyCreationRequestDto requestDto) {
         return new PartyResponseDto(1L, "", "");
     }
 
