@@ -52,4 +52,9 @@ public class Party extends BaseTimeEntity {
         this.orderTime = orderTime;
         this.status = PartyStatus.OPEN;
     }
+
+    public boolean isJoinable() {
+        return true;
+    }
+
 }

@@ -1,11 +1,15 @@
 package com.example.delibuddy.web.auth;
 
+import com.example.delibuddy.domain.user.User;
+import com.example.delibuddy.domain.user.UserRepository;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Data
 @Builder

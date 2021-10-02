@@ -35,8 +35,9 @@ public class PartyController {
     }
 
     @PostMapping("${api.v1}/parties/{id}/join")
-    public PartyResponseDto joinParty(@RequestParam Long id) {
+    public PartyResponseDto joinParty(@PathVariable Long id) {
         // 이것도 okay 만 보내면 될 듯?
+        partyService.join(id);
         return new PartyResponseDto(1L, "", "");
     }
 
