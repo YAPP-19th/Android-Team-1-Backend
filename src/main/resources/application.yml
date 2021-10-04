@@ -5,7 +5,7 @@ spring:
     username: root
     password: 22380476
   jpa:
-    hibernate.ddl-auto: create
+    hibernate.ddl-auto: update
     generate-ddl: true
     database: mysql
     properties:
@@ -17,5 +17,8 @@ logging:
     hibernate:
       SQL: debug
       type: trace
+
+jwt:
+  secret: "sorktkakddmldmaclagksrhfWkrlfhekslfwlfkehenfudnjgkwldksgdmadms"
 
 # TODO 자신이 설정한 application.yml 의 설정이 제대로 spring 에 인식이 되었는지 확인하는 방법을 찾을 것

@@ -16,19 +16,24 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 30)
     private String nickName;
 
-    @Column(length = 100, nullable = false, unique = true)
+    @Column(length = 255, nullable = false, unique = true)
     private String kakaoId;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 255)
     private String email;
 
+    @Column(length = 255)
+    private String profileImage;
+
     @Builder
-    public User(String nickName, String kakaoId) {
+    public User(String nickName, String kakaoId, String email, String profileImage) {
         this.nickName = nickName;
         this.kakaoId = kakaoId;
+        this.email = email;
+        this.profileImage = profileImage;
     }
 
 }
