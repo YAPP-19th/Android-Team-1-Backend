@@ -18,4 +18,7 @@ logging:
       SQL: debug
       type: trace
 
+jwt:
+  secret: "I shall fear no evil, for thou art with me"
+
 # TODO 자신이 설정한 application.yml 의 설정이 제대로 spring 에 인식이 되었는지 확인하는 방법을 찾을 것
