@@ -2,19 +2,25 @@ package com.example.delibuddy.domain.party;
 
 import com.example.delibuddy.domain.BaseTimeEntity;
 import com.example.delibuddy.domain.user.User;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+
+@NoArgsConstructor
+@Getter
 @Entity
 @Table(
-        name="party_members",
+        name="party_user",
         uniqueConstraints={
                 @UniqueConstraint(
                         columnNames={"user_id","party_id"}
                 )
         }
 )
-public class PartyMember extends BaseTimeEntity { // TODO 얘는 왜 테이블에 s 가 붙지...?
+public class PartyUser extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +34,9 @@ public class PartyMember extends BaseTimeEntity { // TODO 얘는 왜 테이블�
     @JoinColumn(name = "party_id")
     private Party party;
 
+    @Builder
+    public PartyUser(User user, Party party) {
+        this.user = user;
+        this.party = party;
+    }
 }

@@ -2,6 +2,8 @@ package com.example.delibuddy.service;
 
 import com.example.delibuddy.domain.party.Party;
 import com.example.delibuddy.domain.party.PartyRepository;
+import com.example.delibuddy.domain.user.User;
+import com.example.delibuddy.domain.user.UserRepository;
 import com.example.delibuddy.web.dto.PartyResponseDto;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Point;
@@ -23,6 +25,9 @@ class PartyServiceTest {
 
     @Autowired
     private PartyService partyService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private Party createParty() {
         Point point;
@@ -87,6 +92,21 @@ class PartyServiceTest {
 
     @Test
     void 강퇴당한_사람은_다시_못_들어오지롱() {
+
+        // Given: party 와 user 생성
+        Party party1 = createParty();
+        User user = userRepository.save(
+            User.builder()
+                .nickName("test")
+                .kakaoId("test-kakao-id")
+                .build()
+        );
+
+        partyService.join(party1.getId(), user.getKakaoId());
+
+        Party resultParty = partyRepository.getById(party1.getId());
+
+        System.out.println("resultParty = " + resultParty);
 
     }
 

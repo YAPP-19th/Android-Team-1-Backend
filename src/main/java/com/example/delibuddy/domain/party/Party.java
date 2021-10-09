@@ -9,6 +9,7 @@ import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -24,8 +25,8 @@ public class Party extends BaseTimeEntity {
     @JoinColumn(name = "leader_id")
     private User leader;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<User> members;
+    @OneToMany(mappedBy = "party", fetch = FetchType.LAZY)
+    private List<PartyUser> users = new ArrayList<>();
 
     @Column(columnDefinition = "CHAR(255)")
     private String title;
@@ -55,6 +56,12 @@ public class Party extends BaseTimeEntity {
 
     public boolean isJoinable() {
         return true;
+    }
+
+    public void join(PartyUser partyUser) {
+        // TODO: 아니 이걸 해줘야되?? PartyUser 를 생성해서 flush 하면 자동으로 감지될 수는 없나?
+        users.add(partyUser);
+        partyUser.getUser().getParties().add(partyUser);
     }
 
 }

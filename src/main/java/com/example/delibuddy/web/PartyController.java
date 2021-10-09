@@ -1,11 +1,13 @@
 package com.example.delibuddy.web;
 
 import com.example.delibuddy.service.PartyService;
+import com.example.delibuddy.web.auth.MyUserDetails;
 import com.example.delibuddy.web.dto.OkayDto;
 import com.example.delibuddy.web.dto.PartyCreationRequestDto;
 import com.example.delibuddy.web.dto.PartyResponseDto;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,7 +39,8 @@ public class PartyController {
     @PostMapping("${api.v1}/parties/{id}/join")
     public PartyResponseDto joinParty(@PathVariable Long id) {
         // 이것도 okay 만 보내면 될 듯?
-        partyService.join(id);
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        partyService.join(id, userDetails.getUsername());
         return new PartyResponseDto(1L, "", "");
     }
 
