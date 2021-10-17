@@ -149,12 +149,22 @@ class PartyServiceTest {
 
     @Test
     void 파티에_이미_들어있지_않다면_join_할_수_있다() {
+        // Given: party 와 user 생성
+        Party party1 = createParty();
+        User user = userRepository.save(
+                User.builder()
+                        .nickName("test")
+                        .kakaoId("test-kakao-id")
+                        .build()
+        );
 
-    }
+        // When: 파티에 입장
+        partyService.join(party1.getId(), user.getKakaoId());
 
-    @Test
-    void 파티장은_파티를_수정할_수_있다() {
-
+        // Then: party.users 안에 포함, PartyUser 도 존재해야 한다.
+        Party resultParty = partyRepository.getById(party1.getId());
+        assertThat(user).isIn(resultParty.getUsers().get(0).getUser());
+        assertThat(partyUserRepository.findByPartyIdAndUserId(resultParty.getId(), user.getId()).isPresent()).isTrue();
     }
 
     @Test
@@ -200,26 +210,6 @@ class PartyServiceTest {
 
         // Then: 파티 제목이 수정되었다!
         assertThat(partyRepository.getById(party.getId()).getTitle()).isEqualTo(title);
-    }
-
-    @Test
-    void join_작동_테스트() {
-        // Given: party 와 user 생성
-        Party party1 = createParty();
-        User user = userRepository.save(
-            User.builder()
-                .nickName("test")
-                .kakaoId("test-kakao-id")
-                .build()
-        );
-
-        // When: 파티에 입장
-        partyService.join(party1.getId(), user.getKakaoId());
-
-        // Then: party.users 안에 포함, PartyUser 도 존재해야 한다.
-        Party resultParty = partyRepository.getById(party1.getId());
-        assertThat(user).isIn(resultParty.getUsers().get(0).getUser());
-        assertThat(partyUserRepository.findByPartyIdAndUserId(resultParty.getId(), user.getId()).isPresent()).isTrue();
     }
 
     @Test
