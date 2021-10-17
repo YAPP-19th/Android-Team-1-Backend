@@ -3,7 +3,8 @@ package com.example.delibuddy.domain.party;
 public enum PartyStatus {
     OPEN("모집중"),
     ORDERING("주문중"),
-    DONE("주문완료");
+    DONE("주문완료"),
+    ARRIVED("음식도착");
 
     private String status;
 
