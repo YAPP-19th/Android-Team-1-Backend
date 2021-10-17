@@ -2,6 +2,7 @@ package com.example.delibuddy.domain.party;
 
 import com.example.delibuddy.domain.BaseTimeEntity;
 import com.example.delibuddy.domain.user.User;
+import com.example.delibuddy.web.dto.PartyResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -54,8 +56,8 @@ public class Party extends BaseTimeEntity {
         this.status = PartyStatus.OPEN;
     }
 
-    public boolean isJoinable() {
-        return true;
+    public boolean isIn(User user) {
+        return !users.stream().map(PartyUser::getUser).anyMatch(u -> u.getId().equals(user.getId()));
     }
 
     public void join(PartyUser partyUser) {

@@ -72,8 +72,25 @@ class PartyServiceTest {
     }
 
     @Test
-    void 같은_파티에_2번_들어갈_수_없다() {
+    void 파티장이_아니라면_강퇴할_수_없다() {
 
+    }
+
+    @Test
+    void 같은_파티에_2번_들어갈_수_없다() {
+        // Given: 이미 파티에 들어감
+        Party party = createParty();
+        User user = userRepository.save(
+                User.builder()
+                        .nickName("test")
+                        .kakaoId("test-kakao-id")
+                        .build()
+        );
+        partyService.join(party.getId(), user.getKakaoId());
+
+        // Expect: 파티에 2번 입장하면 예외가 터진다.
+        IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class, () -> partyService.join(party.getId(), user.getKakaoId()));
+        System.out.println("illegalArgumentException = " + illegalArgumentException);
     }
 
     @Test

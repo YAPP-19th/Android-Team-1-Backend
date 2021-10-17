@@ -37,7 +37,6 @@ public class PartyService {
 
     public void join(Long partyId, String userKakaoId) {
         User user = userRepository.findByKakaoId(userKakaoId).get();
-        // TODO ban 내역이 있는지 먼저 조회. 있다면 throw
 
         if (banRepository.findByPartyIdAndUserId(partyId, user.getId()).isPresent()) {
             throw new IllegalArgumentException("강퇴당한 파티입니다.");
@@ -46,8 +45,8 @@ public class PartyService {
         // 내역이 없다면 join party 가 join 가능 상태인지 체크. 아니라면 throw
         Party party = partyRepository.getById(partyId);
 
-        if (!party.isJoinable()) {
-            throw new IllegalArgumentException("party 가 가입 불가능 합니다."); // 왜 다른 exception 은 던질 수 없는데 IllegalArgumentException 은 덜질 수 있지?
+        if (!party.isIn(user)) {
+            throw new IllegalArgumentException("이미 가입한 파티입니다."); // 왜 다른 exception 은 던질 수 없는데 IllegalArgumentException 은 덜질 수 있지?
         }
 
         PartyUser partyUser = partyUserRepository.save(PartyUser.builder().user(user).party(party).build());
