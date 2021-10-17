@@ -2,10 +2,7 @@ package com.example.delibuddy.web;
 
 import com.example.delibuddy.service.PartyService;
 import com.example.delibuddy.web.auth.MyUserDetails;
-import com.example.delibuddy.web.dto.OkayDto;
-import com.example.delibuddy.web.dto.PartyCreationRequestDto;
-import com.example.delibuddy.web.dto.PartyEditRequestDto;
-import com.example.delibuddy.web.dto.PartyResponseDto;
+import com.example.delibuddy.web.dto.*;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,13 +19,21 @@ public class PartyController {
 
     @PostMapping("${api.v1}/parties")
     public PartyResponseDto createParty(@RequestBody PartyCreationRequestDto requestDto) {
-        return partyService.create(requestDto);
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return partyService.create(userDetails.getUsername(), requestDto);
     }
 
     @PutMapping("${api.v1}/parties/{id}")
     public OkayDto editParty(@RequestBody PartyEditRequestDto requestDto, @PathVariable Long id) {
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         partyService.edit(userDetails.getUsername(), id, requestDto);
+        return new OkayDto();
+    }
+
+    @PutMapping("${api.v1}/parties/{id}")
+    public OkayDto changeStatus(@RequestBody PartyChangeStatusRequestDto requestDto, @PathVariable Long id) {
+        // todo 구현하기. 파티는 OPEN -> ORDERING -> DONE 상태로 proceed 합니다.
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return new OkayDto();
     }
 
@@ -66,6 +71,7 @@ public class PartyController {
 
     @GetMapping("${api.v1}/parties/circle")
     public List<PartyResponseDto> getPartiesInCircle(@RequestParam String point, @RequestParam int distance, @RequestParam String categories) {
+        // todo: category 의 리스트도 조건에 포함되도록, query dsl 로 구현해보자.
         return partyService.getPartiesInCircle(point, distance);
     }
 

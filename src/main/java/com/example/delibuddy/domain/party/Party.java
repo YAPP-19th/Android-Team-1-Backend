@@ -40,7 +40,8 @@ public class Party extends BaseTimeEntity {
     @Column
     private Point coordinate;
 
-    // TODO: enum status 만들기
+    @Column
+    private String placeName;
 
     @Column
     private PartyStatus status;
@@ -49,7 +50,7 @@ public class Party extends BaseTimeEntity {
     private LocalDateTime orderTime;
 
     @Builder
-    public Party(User leader, Point coordinate, String title, String body, LocalDateTime orderTime) {
+    public Party(User leader, Point coordinate, String title, String body, String placeName, LocalDateTime orderTime) {
         this.leader = leader;
         this.coordinate = coordinate;
         this.title = title;

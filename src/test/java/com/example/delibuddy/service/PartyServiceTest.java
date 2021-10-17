@@ -125,6 +125,28 @@ class PartyServiceTest {
         System.out.println("illegalArgumentException = " + illegalArgumentException);
     }
 
+
+    @Test
+    void 파티장도_파티멤버다() {
+        // TODO
+    }
+
+    @Test
+    void 파티장은_강퇴할_수_없다() {
+        // Given: party 와 user 생성, 파티에 입장. 그리고 강퇴
+        User me = userRepository.save(
+                User.builder()
+                        .nickName("test")
+                        .kakaoId("test-kakao-id")
+                        .build()
+        );
+        Party party = partyRepository.save(Party.builder().leader(me).build());
+        partyService.ban(me.getKakaoId(), party.getId(), me.getKakaoId());
+
+        // Expect: IllegalArgumentException 이 터진다.
+        assertThrows(IllegalArgumentException.class, () -> partyService.join(party.getId(), me.getKakaoId()));
+    }
+
     @Test
     void 같은_파티에_2번_들어갈_수_없다() {
         // Given: 이미 파티에 들어감
@@ -235,4 +257,5 @@ class PartyServiceTest {
         // TODO: 나중에 적절한 Exception 으로 바꾸장
         assertThrows(IllegalArgumentException.class, () -> partyService.join(party.getId(), you.getKakaoId()));
     }
+
 }

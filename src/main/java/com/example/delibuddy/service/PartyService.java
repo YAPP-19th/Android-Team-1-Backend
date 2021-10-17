@@ -38,6 +38,10 @@ public class PartyService {
             throw new IllegalArgumentException("파티장만 강퇴할 수 있습니다.");
         }
 
+        if (target.getId().equals(party.getLeader().getId())) {
+            throw new IllegalArgumentException("파티장을 강퇴할 수는 없습니다.");
+        }
+
         partyUserRepository.deleteByPartyIdAndUserId(partyId, target.getId());
         banRepository.save(Ban.builder().party(party).user(target).build());
     }
@@ -72,9 +76,12 @@ public class PartyService {
     }
 
     @Transactional
-    public PartyResponseDto create(PartyCreationRequestDto dto) {
+    public PartyResponseDto create(String leaderKakaoId, PartyCreationRequestDto dto) {
+        User leader = userRepository.findByKakaoId(leaderKakaoId).get();
         Party party = dto.toEntity();
         partyRepository.save(party);
+        PartyUser partyUser = partyUserRepository.save(PartyUser.builder().user(leader).party(party).build());
+        party.join(partyUser);
         return new PartyResponseDto(party);
     }
 
