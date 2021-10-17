@@ -1,6 +1,7 @@
 package com.example.delibuddy.service;
 
 
+import com.example.delibuddy.domain.ban.Ban;
 import com.example.delibuddy.domain.ban.BanRepository;
 import com.example.delibuddy.domain.party.Party;
 import com.example.delibuddy.domain.party.PartyUser;
@@ -27,13 +28,20 @@ public class PartyService {
     private final PartyUserRepository partyUserRepository;
     private final BanRepository banRepository;
 
-    public void ban() {
-
+    public void ban(long partyId, String userKakaoId) {
+        User user = userRepository.findByKakaoId(userKakaoId).get();
+        Party party = partyRepository.getById(partyId);
+        partyUserRepository.deleteByPartyIdAndUserId(partyId, user.getId());
+        banRepository.save(Ban.builder().party(party).user(user).build());
     }
 
     public void join(Long partyId, String userKakaoId) {
         User user = userRepository.findByKakaoId(userKakaoId).get();
-        // ban 내역이 있는지 먼저 조회. 있다면 throw
+        // TODO ban 내역이 있는지 먼저 조회. 있다면 throw
+
+        if (banRepository.findByPartyIdAndUserId(partyId, user.getId()).isPresent()) {
+            throw new IllegalArgumentException("강퇴당한 파티입니다.");
+        }
 
         // 내역이 없다면 join party 가 join 가능 상태인지 체크. 아니라면 throw
         Party party = partyRepository.getById(partyId);

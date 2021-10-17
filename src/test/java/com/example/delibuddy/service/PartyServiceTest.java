@@ -2,6 +2,8 @@ package com.example.delibuddy.service;
 
 import com.example.delibuddy.domain.party.Party;
 import com.example.delibuddy.domain.party.PartyRepository;
+import com.example.delibuddy.domain.party.PartyUser;
+import com.example.delibuddy.domain.party.PartyUserRepository;
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
 import com.example.delibuddy.web.dto.PartyResponseDto;
@@ -15,6 +17,7 @@ import javax.transaction.Transactional;
 
 import static com.example.delibuddy.util.GeoHelper.wktToGeometry;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
@@ -22,6 +25,9 @@ class PartyServiceTest {
 
     @Autowired
     private PartyRepository partyRepository;
+
+    @Autowired
+    private PartyUserRepository partyUserRepository;
 
     @Autowired
     private PartyService partyService;
@@ -91,8 +97,7 @@ class PartyServiceTest {
     }
 
     @Test
-    void 강퇴당한_사람은_다시_못_들어오지롱() {
-
+    void join_작동_테스트() {
         // Given: party 와 user 생성
         Party party1 = createParty();
         User user = userRepository.save(
@@ -102,12 +107,30 @@ class PartyServiceTest {
                 .build()
         );
 
+        // When: 파티에 입장
         partyService.join(party1.getId(), user.getKakaoId());
 
+        // Then: party.users 안에 포함, PartyUser 도 존재해야 한다.
         Party resultParty = partyRepository.getById(party1.getId());
-
-        System.out.println("resultParty = " + resultParty);
-
+        assertThat(user).isIn(resultParty.getUsers().get(0).getUser());
+        assertThat(partyUserRepository.findByPartyIdAndUserId(resultParty.getId(), user.getId()).isPresent()).isTrue();
     }
 
+    @Test
+    void 강퇴당한_사람은_다시_못_들어오지롱() {
+        // Given: party 와 user 생성, 파티에 입장
+        Party party1 = createParty();
+        User user = userRepository.save(
+                User.builder()
+                        .nickName("test")
+                        .kakaoId("test-kakao-id")
+                        .build()
+        );
+        partyService.join(party1.getId(), user.getKakaoId());
+        partyService.ban(party1.getId(), user.getKakaoId());
+
+        // Expect: IllegalArgumentException 이 터진다.
+        // TODO: 나중에 적절한 Exception 으로 바꾸장
+        assertThrows(IllegalArgumentException.class, () -> partyService.join(party1.getId(), user.getKakaoId()));
+    }
 }
