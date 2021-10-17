@@ -4,6 +4,7 @@ import com.example.delibuddy.service.PartyService;
 import com.example.delibuddy.web.auth.MyUserDetails;
 import com.example.delibuddy.web.dto.OkayDto;
 import com.example.delibuddy.web.dto.PartyCreationRequestDto;
+import com.example.delibuddy.web.dto.PartyEditRequestDto;
 import com.example.delibuddy.web.dto.PartyResponseDto;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,10 @@ public class PartyController {
     }
 
     @PutMapping("${api.v1}/parties/{id}")
-    public PartyResponseDto editParty(@RequestBody PartyCreationRequestDto requestDto) {
-        return new PartyResponseDto(1L, "", "");
+    public OkayDto editParty(@RequestBody PartyEditRequestDto requestDto, @PathVariable Long id) {
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        partyService.edit(userDetails.getUsername(), id, requestDto);
+        return new OkayDto();
     }
 
     @DeleteMapping("${api.v1}/parties/{id}")

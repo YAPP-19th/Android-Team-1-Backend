@@ -2,6 +2,7 @@ package com.example.delibuddy.domain.party;
 
 import com.example.delibuddy.domain.BaseTimeEntity;
 import com.example.delibuddy.domain.user.User;
+import com.example.delibuddy.web.dto.PartyEditRequestDto;
 import com.example.delibuddy.web.dto.PartyResponseDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -67,4 +68,9 @@ public class Party extends BaseTimeEntity {
         partyUser.getUser().getParties().add(partyUser);
     }
 
+    public void edit(PartyEditRequestDto dto) {
+        title = dto.getTitle() != null ? dto.getTitle() : title;
+        body = dto.getBody() != null ? dto.getBody() : body;
+        coordinate = dto.getCoordinate() != null ? dto.getPoint() : coordinate;
+    }
 }

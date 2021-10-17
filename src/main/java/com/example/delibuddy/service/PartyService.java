@@ -10,6 +10,7 @@ import com.example.delibuddy.domain.party.PartyRepository;
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
 import com.example.delibuddy.web.dto.PartyCreationRequestDto;
+import com.example.delibuddy.web.dto.PartyEditRequestDto;
 import com.example.delibuddy.web.dto.PartyResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -59,8 +60,15 @@ public class PartyService {
         party.join(partyUser);
     }
 
-    public void edit() {
+    public void edit(String leaderKakaoId, long partyId, PartyEditRequestDto dto) {
+        Party party = partyRepository.getById(partyId);
+        User leader = userRepository.findByKakaoId(leaderKakaoId).get();
 
+        if (!leader.getId().equals(party.getLeader().getId())) {
+            throw new IllegalArgumentException("파티장만 파티를 수정할 수 있습니다.");
+        }
+
+        party.edit(dto);
     }
 
     @Transactional

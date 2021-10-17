@@ -6,6 +6,7 @@ import com.example.delibuddy.domain.party.PartyUser;
 import com.example.delibuddy.domain.party.PartyUserRepository;
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
+import com.example.delibuddy.web.dto.PartyEditRequestDto;
 import com.example.delibuddy.web.dto.PartyResponseDto;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Point;
@@ -158,7 +159,47 @@ class PartyServiceTest {
 
     @Test
     void 파티장이_아니면_파티를_수정할_수_없다() {
+        // Given: 파티장과 너
+        User me = userRepository.save(
+                User.builder()
+                        .nickName("test")
+                        .kakaoId("test-kakao-id")
+                        .build()
+        );
 
+        User you = userRepository.save(
+                User.builder()
+                        .nickName("test2")
+                        .kakaoId("test-kakao-id2")
+                        .build()
+        );
+        Party party = partyRepository.save(Party.builder().leader(me).build());
+        partyService.join(party.getId(), you.getKakaoId());
+
+        // Expect: 리더가 아닌 사람이 파티 수정 요청을 보낸다. 예외 터짐
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> partyService.edit(you.getKakaoId(), party.getId(), new PartyEditRequestDto("안녕", "파티", "(2 2)"))
+        );
+    }
+
+    @Test
+    void 파티수정을_통해_title_을_바꿀_수_있다() {
+        // Given: 유저와 파티
+        User me = userRepository.save(
+                User.builder()
+                        .nickName("test")
+                        .kakaoId("test-kakao-id")
+                        .build()
+        );
+        Party party = partyRepository.save(Party.builder().leader(me).build());
+        String title = "김치";
+
+        // When: 파티 수정 요청을 보낸다
+        partyService.edit(me.getKakaoId(), party.getId(), new PartyEditRequestDto(title, "파티", "(2 2)"));
+
+        // Then: 파티 제목이 수정되었다!
+        assertThat(partyRepository.getById(party.getId()).getTitle()).isEqualTo(title);
     }
 
     @Test
