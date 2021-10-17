@@ -99,4 +99,20 @@ public class PartyService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<PartyResponseDto> getPartiesInGeom(String wkt) {
+        // TODO: 테스트 필요
+        return partyRepository.findPartiesInGeom(wkt).stream()
+                .map(PartyResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PartyResponseDto> getMyParties(String point, int distance) {
+        // TODO: 구현하기
+        return partyRepository.findPartiesNear(point, distance).stream()
+                .map(PartyResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
 }
