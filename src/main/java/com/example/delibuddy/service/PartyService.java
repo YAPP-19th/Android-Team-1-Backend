@@ -28,11 +28,17 @@ public class PartyService {
     private final PartyUserRepository partyUserRepository;
     private final BanRepository banRepository;
 
-    public void ban(long partyId, String userKakaoId) {
-        User user = userRepository.findByKakaoId(userKakaoId).get();
+    public void ban(String leaderKakaoId, long partyId, String targetKakaoId) {
         Party party = partyRepository.getById(partyId);
-        partyUserRepository.deleteByPartyIdAndUserId(partyId, user.getId());
-        banRepository.save(Ban.builder().party(party).user(user).build());
+        User leader = userRepository.findByKakaoId(leaderKakaoId).get();
+        User target = userRepository.findByKakaoId(targetKakaoId).get();
+
+        if (!leader.getId().equals(party.getLeader().getId())) {
+            throw new IllegalArgumentException("파티장만 강퇴할 수 있습니다.");
+        }
+
+        partyUserRepository.deleteByPartyIdAndUserId(partyId, target.getId());
+        banRepository.save(Ban.builder().party(party).user(target).build());
     }
 
     public void join(Long partyId, String userKakaoId) {

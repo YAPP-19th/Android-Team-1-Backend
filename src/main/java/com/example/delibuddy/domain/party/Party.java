@@ -24,7 +24,7 @@ public class Party extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "leader_id")
+    @JoinColumn(name = "leader_id") // TODO: nullable false 넣어야 할 것 같은데 ㅋ
     private User leader;
 
     @OneToMany(mappedBy = "party", fetch = FetchType.LAZY)
@@ -48,7 +48,8 @@ public class Party extends BaseTimeEntity {
     private LocalDateTime orderTime;
 
     @Builder
-    public Party(Point coordinate, String title, String body, LocalDateTime orderTime) {
+    public Party(User leader, Point coordinate, String title, String body, LocalDateTime orderTime) {
+        this.leader = leader;
         this.coordinate = coordinate;
         this.title = title;
         this.body = body;
