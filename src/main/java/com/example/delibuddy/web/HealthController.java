@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "Health")
 @RestController
 public class HealthController {
-
+    // test comment
     @GetMapping("/")
     public HealthResponseDto health() {
         return new HealthResponseDto();
