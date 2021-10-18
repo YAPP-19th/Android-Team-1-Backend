@@ -44,14 +44,13 @@ class PartyRepositoryTest {
     public void 파티_등록() {
         // Given
         String pointString = "POINT (127.02558 37.3016)";
-        createPartyWithPointString(pointString);
+        Party party = createPartyWithPointString(pointString);
 
         // When
-        List<Party> partyList = partyRepository.findAll();
+        Party resultParty = partyRepository.getById(party.getId());
 
         // Then
-        Party party = partyList.get(0);
-        assertEquals(pointString, party.getCoordinate().toString());
+        assertEquals(pointString, resultParty.getCoordinate().toString());
     }
 
     @Test

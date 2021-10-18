@@ -55,6 +55,7 @@ public class Party extends BaseTimeEntity {
         this.coordinate = coordinate;
         this.title = title;
         this.body = body;
+        this.placeName = placeName;
         this.orderTime = orderTime;
         this.status = PartyStatus.OPEN;
     }

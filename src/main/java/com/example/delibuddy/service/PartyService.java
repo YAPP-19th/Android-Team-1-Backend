@@ -29,7 +29,7 @@ public class PartyService {
     private final PartyUserRepository partyUserRepository;
     private final BanRepository banRepository;
 
-    public void ban(String leaderKakaoId, long partyId, String targetKakaoId) {
+    public void ban(String leaderKakaoId, Long partyId, String targetKakaoId) {
         Party party = partyRepository.getById(partyId);
         User leader = userRepository.findByKakaoId(leaderKakaoId).get();
         User target = userRepository.findByKakaoId(targetKakaoId).get();
@@ -64,7 +64,7 @@ public class PartyService {
         party.join(partyUser);
     }
 
-    public void edit(String leaderKakaoId, long partyId, PartyEditRequestDto dto) {
+    public void edit(String leaderKakaoId, Long partyId, PartyEditRequestDto dto) {
         Party party = partyRepository.getById(partyId);
         User leader = userRepository.findByKakaoId(leaderKakaoId).get();
 

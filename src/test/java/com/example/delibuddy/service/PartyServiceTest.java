@@ -141,10 +141,9 @@ class PartyServiceTest {
                         .build()
         );
         Party party = partyRepository.save(Party.builder().leader(me).build());
-        partyService.ban(me.getKakaoId(), party.getId(), me.getKakaoId());
 
         // Expect: IllegalArgumentException 이 터진다.
-        assertThrows(IllegalArgumentException.class, () -> partyService.join(party.getId(), me.getKakaoId()));
+        assertThrows(IllegalArgumentException.class, () -> partyService.ban(me.getKakaoId(), party.getId(), me.getKakaoId()));
     }
 
     @Test

@@ -30,7 +30,7 @@ public class PartyController {
         return new OkayDto();
     }
 
-    @PutMapping("${api.v1}/parties/{id}")
+    @PutMapping("${api.v1}/parties/{id}/status")
     public OkayDto changeStatus(@RequestBody PartyChangeStatusRequestDto requestDto, @PathVariable Long id) {
         // todo 구현하기. 파티는 OPEN -> ORDERING -> DONE 상태로 proceed 합니다.
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
