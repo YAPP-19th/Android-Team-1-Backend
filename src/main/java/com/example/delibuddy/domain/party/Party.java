@@ -25,7 +25,7 @@ public class Party extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "leader_id") // TODO: nullable false 넣어야 할 것 같은데 ㅋ
+    @JoinColumn(name = "leader_id")
     private User leader;
 
     @OneToMany(mappedBy = "party", fetch = FetchType.LAZY)
