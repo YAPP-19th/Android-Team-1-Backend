@@ -1,5 +1,6 @@
 package com.example.delibuddy.service;
 
+import com.example.delibuddy.domain.ban.BanRepository;
 import com.example.delibuddy.domain.party.Party;
 import com.example.delibuddy.domain.party.PartyRepository;
 import com.example.delibuddy.domain.party.PartyUser;
@@ -35,6 +36,9 @@ class PartyServiceTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BanRepository banRepository;
 
     private Party createParty() {
         Point point;
@@ -89,8 +93,9 @@ class PartyServiceTest {
         // When: 파티장이 한다 강퇴를
         partyService.ban(me.getKakaoId(), party.getId(), you.getKakaoId());
 
-        // Then: 파티에서 퇴출 완료!
+        // Then: 파티에서 퇴출 완료! Ban 기록이 남습니다.
         assertThat(party.isIn(you)).isFalse();
+        assertThat(banRepository.findByPartyIdAndUserId(party.getId(), you.getId()).isPresent()).isTrue();
 
     }
 

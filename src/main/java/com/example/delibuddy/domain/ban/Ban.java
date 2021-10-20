@@ -38,8 +38,7 @@ public class Ban extends BaseTimeEntity {
 //    private Long party_id;
 
     @Builder
-    public Ban(Long id, User user, Party party) {
-        this.id = id;
+    public Ban(User user, Party party) {
         this.user = user;
         this.party = party;
     }
