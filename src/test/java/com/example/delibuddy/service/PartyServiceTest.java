@@ -92,7 +92,7 @@ class PartyServiceTest {
         partyService.join(party.getId(), you.getKakaoId());
 
         // When: 파티장이 한다 강퇴를
-        partyService.ban(me.getKakaoId(), party.getId(), you.getKakaoId());
+        partyService.ban(me.getKakaoId(), party.getId(), you.getId());
 
         // Then: 파티에서 퇴출 완료! Ban 기록이 남습니다.
         Party resultParty = partyRepository.getById(party.getId());
@@ -128,7 +128,10 @@ class PartyServiceTest {
         partyService.join(party.getId(), you.getKakaoId());
 
         // Expect: 이상한 사람이 강퇴를 시도하면 예외 터진다.
-        IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class, () -> partyService.ban(other.getKakaoId(), party.getId(), you.getKakaoId()));
+        IllegalArgumentException illegalArgumentException = assertThrows(
+            IllegalArgumentException.class,
+            () -> partyService.ban(other.getKakaoId(), party.getId(), you.getId())
+        );
         System.out.println("illegalArgumentException = " + illegalArgumentException);
     }
 
@@ -167,7 +170,7 @@ class PartyServiceTest {
         Party party = partyRepository.save(Party.builder().leader(me).build());
 
         // Expect: IllegalArgumentException 이 터진다.
-        assertThrows(IllegalArgumentException.class, () -> partyService.ban(me.getKakaoId(), party.getId(), me.getKakaoId()));
+        assertThrows(IllegalArgumentException.class, () -> partyService.ban(me.getKakaoId(), party.getId(), me.getId()));
     }
 
     @Test
@@ -274,7 +277,7 @@ class PartyServiceTest {
         );
         Party party = partyRepository.save(Party.builder().leader(me).build());
         partyService.join(party.getId(), you.getKakaoId());
-        partyService.ban(me.getKakaoId(), party.getId(), you.getKakaoId());
+        partyService.ban(me.getKakaoId(), party.getId(), you.getId());
 
         // Expect: IllegalArgumentException 이 터진다.
         // TODO: 나중에 적절한 Exception 으로 바꾸장

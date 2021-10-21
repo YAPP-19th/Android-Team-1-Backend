@@ -29,10 +29,10 @@ public class PartyService {
     private final PartyUserRepository partyUserRepository;
     private final BanRepository banRepository;
 
-    public void ban(String leaderKakaoId, Long partyId, String targetKakaoId) {
+    public void ban(String leaderKakaoId, Long partyId, Long targetId) {
         Party party = partyRepository.getById(partyId);
         User leader = userRepository.findByKakaoId(leaderKakaoId).get();
-        User target = userRepository.findByKakaoId(targetKakaoId).get();
+        User target = userRepository.getById(targetId);
 
         if (!leader.getId().equals(party.getLeader().getId())) {
             throw new IllegalArgumentException("파티장만 강퇴할 수 있습니다.");
