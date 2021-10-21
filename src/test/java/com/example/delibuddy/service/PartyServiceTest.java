@@ -7,6 +7,7 @@ import com.example.delibuddy.domain.party.PartyUser;
 import com.example.delibuddy.domain.party.PartyUserRepository;
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
+import com.example.delibuddy.web.dto.PartyCreationRequestDto;
 import com.example.delibuddy.web.dto.PartyEditRequestDto;
 import com.example.delibuddy.web.dto.PartyResponseDto;
 import org.junit.jupiter.api.Test;
@@ -134,7 +135,20 @@ class PartyServiceTest {
 
     @Test
     void 파티장도_파티멤버다() {
-        // TODO
+        User me = userRepository.save(
+                User.builder()
+                        .nickName("test")
+                        .kakaoId("test-kakao-id")
+                        .build()
+        );
+
+        PartyResponseDto dto = partyService.create(
+            me.getKakaoId(),
+            new PartyCreationRequestDto("my party", "body", "(1 1)")
+        );
+        Party party = partyRepository.getById(dto.getId());
+        assertThat(party).isNotNull();
+        assertThat(party.isIn(me)).isTrue();
     }
 
     @Test

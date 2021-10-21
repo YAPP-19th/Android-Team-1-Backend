@@ -43,7 +43,7 @@ public class PartyService {
         }
 
         partyUserRepository.deleteByPartyIdAndUserId(partyId, target.getId());
-        party.getUsers().removeIf(partyUser -> partyUser.getUser().getId().equals(target.getId()));
+        party.getUsers().removeIf(pu -> pu.getUser().getId().equals(target.getId()));
         // party user 가 삭제된 것을 party user repository 는 알지만
         // partyRepository 는 delete 된 party user 를 여전히 가리키고 있음 (find() 로 다시 가져와도...!) 실화임?
         // https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=rorean&logNo=221466846173
@@ -83,7 +83,7 @@ public class PartyService {
     @Transactional
     public PartyResponseDto create(String leaderKakaoId, PartyCreationRequestDto dto) {
         User leader = userRepository.findByKakaoId(leaderKakaoId).get();
-        Party party = dto.toEntity();
+        Party party = dto.toEntity(leader);
         partyRepository.save(party);
         PartyUser partyUser = partyUserRepository.save(PartyUser.builder().user(leader).party(party).build());
         party.join(partyUser);
