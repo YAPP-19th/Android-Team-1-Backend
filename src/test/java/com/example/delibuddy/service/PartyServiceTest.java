@@ -94,8 +94,9 @@ class PartyServiceTest {
         partyService.ban(me.getKakaoId(), party.getId(), you.getKakaoId());
 
         // Then: 파티에서 퇴출 완료! Ban 기록이 남습니다.
-        assertThat(party.isIn(you)).isFalse();
-        assertThat(banRepository.findByPartyIdAndUserId(party.getId(), you.getId()).isPresent()).isTrue();
+        Party resultParty = partyRepository.getById(party.getId());
+        assertThat(resultParty.isIn(you)).isFalse();
+        assertThat(banRepository.findByPartyIdAndUserId(resultParty.getId(), you.getId()).isPresent()).isTrue();
 
     }
 

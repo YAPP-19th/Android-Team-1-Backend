@@ -61,7 +61,7 @@ public class Party extends BaseTimeEntity {
     }
 
     public boolean isIn(User user) {
-        return !users.stream().map(PartyUser::getUser).anyMatch(u -> u.getId().equals(user.getId()));
+        return users.stream().map(PartyUser::getUser).anyMatch(u -> u.getId().equals(user.getId()));
     }
 
     public void join(PartyUser partyUser) {

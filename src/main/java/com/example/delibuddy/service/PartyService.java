@@ -43,6 +43,11 @@ public class PartyService {
         }
 
         partyUserRepository.deleteByPartyIdAndUserId(partyId, target.getId());
+        party.getUsers().removeIf(partyUser -> partyUser.getUser().getId().equals(target.getId()));
+        // party user 가 삭제된 것을 party user repository 는 알지만
+        // partyRepository 는 delete 된 party user 를 여전히 가리키고 있음 (find() 로 다시 가져와도...!) 실화임?
+        // https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=rorean&logNo=221466846173
+        // 이걸 수동으로 끊으라고 하네...? 와...
         banRepository.save(Ban.builder().party(party).user(target).build());
     }
 
@@ -56,7 +61,7 @@ public class PartyService {
         // 내역이 없다면 join party 가 join 가능 상태인지 체크. 아니라면 throw
         Party party = partyRepository.getById(partyId);
 
-        if (!party.isIn(user)) {
+        if (party.isIn(user)) {
             throw new IllegalArgumentException("이미 가입한 파티입니다."); // 왜 다른 exception 은 던질 수 없는데 IllegalArgumentException 은 덜질 수 있지?
         }
 
