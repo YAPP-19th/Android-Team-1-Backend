@@ -135,6 +135,7 @@ class PartyServiceTest {
 
     @Test
     void 파티장도_파티멤버다() {
+        // Given: 사람 한 명
         User me = userRepository.save(
                 User.builder()
                         .nickName("test")
@@ -142,10 +143,13 @@ class PartyServiceTest {
                         .build()
         );
 
+        // When: 파티 생성
         PartyResponseDto dto = partyService.create(
             me.getKakaoId(),
             new PartyCreationRequestDto("my party", "body", "(1 1)")
         );
+
+        // Then: 잘 생성된당
         Party party = partyRepository.getById(dto.getId());
         assertThat(party).isNotNull();
         assertThat(party.isIn(me)).isTrue();
