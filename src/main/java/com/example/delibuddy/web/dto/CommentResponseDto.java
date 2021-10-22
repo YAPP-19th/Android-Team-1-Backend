@@ -7,13 +7,14 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @RequiredArgsConstructor
 public class CommentResponseDto {
     private Long id;
     private Comment parent;
-    private List<Comment> children;
+    private List<CommentResponseDto> children;
     private String body;
     private Party party;
     private User writer;
@@ -21,7 +22,7 @@ public class CommentResponseDto {
     public CommentResponseDto(Comment entity) {
         id = entity.getId();
         parent = entity.getParent();
-        children = entity.getChildren();
+        children = entity.getChildren().stream().map(child -> new CommentResponseDto(child)).collect(Collectors.toList());
         body = entity.getBody();
         party = entity.getParty();
         writer = entity.getWriter();
