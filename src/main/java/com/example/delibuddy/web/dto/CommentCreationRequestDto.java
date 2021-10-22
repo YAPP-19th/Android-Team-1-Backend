@@ -13,12 +13,11 @@ public class CommentCreationRequestDto {
     private final Long partyId;
     private final Long parentId;
 
-    public Comment toEntity(User writer, Party party, Comment parent) {
+    public Comment toEntity(User writer, Party party) {
         return Comment.builder()
                 .body(body)
                 .party(party)
                 .writer(writer)
-                .parent(parent)
                 .build();
     }
 

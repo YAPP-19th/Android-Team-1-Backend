@@ -46,4 +46,11 @@ public class Comment extends BaseTimeEntity {
     public void setAsIsDeleted(){
         isDeleted = Boolean.TRUE;
     }
+    public Boolean hasParent(){
+        return parent != null;
+    }
+    public void setParent(Comment parent){
+        this.parent = parent;
+    }
+
 }

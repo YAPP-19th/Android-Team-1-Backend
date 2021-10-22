@@ -31,18 +31,17 @@ public class CommentService {
     @Transactional
     public CommentResponseDto create(CommentCreationRequestDto dto, String writerKakaoId) {
         User writer = userRepository.findByKakaoId(writerKakaoId).get();
-
         Party party = partyRepository.getById(dto.getPartyId());
-        Comment parent = commentRepository.findById(dto.getParentId()).orElse(null);
-        Comment comment = dto.toEntity(writer, party, parent);
 
-        if (parent != null) { // 부모 댓글이 있는 경우 == 대댓글인 경우
-            if (parent.getParent() != null) { // 부모 댓글의 부모가 있는 경우
+        Comment comment = dto.toEntity(writer, party);
+
+        if (dto.getParentId() != null) {
+            Comment parent = commentRepository.getById(dto.getParentId());
+            if (parent.hasParent()) {
                 throw new IllegalArgumentException("대댓글에는 대댓글을 달 수 없습니다.");
             }
-            else{
-                parent.getChildren().add(comment);
-            }
+            parent.getChildren().add(comment);
+            comment.setParent(parent);
         }
         commentRepository.save(comment);
         // Party party = partyRepository.getById(dto.getPartyId());
