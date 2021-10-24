@@ -5,6 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class HealthResponseDto {
+public class OkayDto {
     private final boolean okay = true;
 }

@@ -23,20 +23,19 @@ class UserRepositoryTest {
         // Given
         String nickName = "테스트 닉네임";
         String kakaoId = "테스트-카카오-id";
-        userRepository.save(
+        User user = userRepository.save(
                 User.builder()
-                .nickName(nickName)
-                .kakaoId(kakaoId)
-                .build()
+                        .nickName(nickName)
+                        .kakaoId(kakaoId)
+                        .build()
         );
 
         // When
-        List<User> userList = userRepository.findAll();
+        User resultUser =  userRepository.getById(user.getId());
 
         // Then
-        User user = userList.get(0);
-        assertEquals(nickName, user.getNickName());
-        assertEquals(kakaoId, user.getKakaoId());
+        assertEquals(nickName, resultUser.getNickName());
+        assertEquals(kakaoId, resultUser.getKakaoId());
     }
 
     @Test
