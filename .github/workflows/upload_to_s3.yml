@@ -1,5 +1,5 @@
 
-name: CI
+name: upload to s3
 
 on:
   push:
