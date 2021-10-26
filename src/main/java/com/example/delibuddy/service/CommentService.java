@@ -40,7 +40,6 @@ public class CommentService {
             if (parent.hasParent()) {
                 throw new IllegalArgumentException("대댓글에는 대댓글을 달 수 없습니다.");
             }
-            parent.getChildren().add(comment);
             comment.setParent(parent);
         }
         commentRepository.save(comment);
