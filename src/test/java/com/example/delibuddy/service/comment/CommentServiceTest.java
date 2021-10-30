@@ -15,10 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.List;
-
-import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.title;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -99,7 +95,7 @@ public class CommentServiceTest {
         assertThat(comment.getParty()).isEqualTo(party);
         assertThat(comment.getParent()).isEqualTo(parent);
         assertThat(comment.getWriter()).isEqualTo(writer);
-        // assertThat(comment).isIn(parent.getChildren()); TODO 이거 왜 빈 리스트로 뜨지..?
+        assertThat(comment).isIn(parent.getChildren());
     }
 
     @Test
@@ -134,7 +130,6 @@ public class CommentServiceTest {
 
         //expect : 자식댓글의 대댓글을 등록한다. 예외터짐
         IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class, () -> commentService.create(dto, writer.getKakaoId()));
-        System.out.println("illegalArgumentException = " + illegalArgumentException);
     }
 
     @Test
@@ -169,6 +164,7 @@ public class CommentServiceTest {
 
     @Test
     void 자식_댓글이_있는_경우에는_댓글_내용이_사라진다(){
+        //given : 파티,유저, 부모 댓글과 자식 댓글
         Party party = partyRepository.save(Party.builder().build());
         User writer = userRepository.save(
                 User.builder()
@@ -185,13 +181,13 @@ public class CommentServiceTest {
         Comment child = commentRepository.save(Comment.builder()
                 .body("테스트 자식댓글")
                 .party(party)
-                .parent(parent)
                 .writer(writer)
                 .build());
 
-        //when : 댓글을 삭제한다.
-        commentService.delete(parent.getId());
+        child.setParent(parent);
 
+        //when : 부모 댓글을 삭제한다.
+        commentService.delete(parent.getId());
 
         //then : 댓글 삭제는 안되고, isDeleted 만 참으로 설정됨
         Comment comment = commentRepository.getById(parent.getId());
