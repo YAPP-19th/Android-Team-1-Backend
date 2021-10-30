@@ -12,7 +12,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -43,8 +43,12 @@ public class Comment extends BaseTimeEntity {
 
     private Boolean isDeleted;
 
-    public List<Comment> getChildren() {
-        return children != null ? children : new ArrayList<Comment>();
+    @Builder
+    public Comment(Comment parent, String body, Party party, User writer){
+        this.parent = parent;
+        this.body = body;
+        this.party = party;
+        this.writer = writer;
     }
 
     public void setAsIsDeleted(){
