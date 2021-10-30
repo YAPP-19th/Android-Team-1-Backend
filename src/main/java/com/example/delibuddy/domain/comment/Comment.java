@@ -28,7 +28,7 @@ public class Comment extends BaseTimeEntity {
     private Comment parent;
 
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    private List<Comment> children = new ArrayList<>();
+    private List<Comment> children = new ArrayList<Comment>();
 
     @Column(columnDefinition = "VARCHAR(1000)", nullable=false)
     private String body;
@@ -42,6 +42,10 @@ public class Comment extends BaseTimeEntity {
     private User writer;
 
     private Boolean isDeleted;
+
+    public List<Comment> getChildren() {
+        return children != null ? children : new ArrayList<Comment>();
+    }
 
     public void setAsIsDeleted(){
         isDeleted = Boolean.TRUE;
