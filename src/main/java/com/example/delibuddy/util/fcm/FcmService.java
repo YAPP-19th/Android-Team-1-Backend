@@ -29,8 +29,8 @@ public class FcmService {
             return FirebaseMessaging.getInstance().sendAsync(message).get();
         } catch (ExecutionException|InterruptedException e) {
             logger.error(e.getMessage());
+            return e.toString();
         }
-        return "";
     }
 
     private AndroidConfig getAndroidConfig(String topic) {
@@ -44,8 +44,7 @@ public class FcmService {
         return ApnsConfig.builder().setAps(Aps.builder().setCategory(topic).setThreadId(topic).build()).build();
     }
     private Message getPreconfiguredMessageToToken(FcmRequest request) {
-        return getPreconfiguredMessageBuilder(request).setToken(request.getToken())
-                .build();
+        return getPreconfiguredMessageBuilder(request).setToken(request.getToken()).build();
     }
     private Message getPreconfiguredMessageWithoutData(FcmRequest request) {
         return getPreconfiguredMessageBuilder(request).setTopic(request.getTopic())
