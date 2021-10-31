@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.delibuddy.util.GeoHelper.wktToGeometry;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -21,9 +22,17 @@ class PartyRepositoryTest {
     @Autowired
     PartyRepository partyRepository;
 
-    public Party createPartyWithPointString(String pointString) throws ParseException {
+    private Party createPartyWithPointString(String pointString){
+        Point point;
+        try {
+            point = (Point) wktToGeometry(pointString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+
         Party party = Party.builder()
-                .coordinate((Point) wktToGeometry(pointString))
+                .coordinate(point)
                 .title("test title")
                 .body("")
                 .build();
@@ -32,21 +41,20 @@ class PartyRepositoryTest {
     }
 
     @Test
-    public void 파티_등록() throws ParseException {
+    public void 파티_등록() {
         // Given
         String pointString = "POINT (127.02558 37.3016)";
-        createPartyWithPointString(pointString);
+        Party party = createPartyWithPointString(pointString);
 
         // When
-        List<Party> partyList = partyRepository.findAll();
+        Party resultParty = partyRepository.getById(party.getId());
 
         // Then
-        Party party = partyList.get(0);
-        assertEquals(pointString, party.getCoordinate().toString());
+        assertEquals(pointString, resultParty.getCoordinate().toString());
     }
 
     @Test
-    public void findPartiesNear_작동_테스트() throws ParseException {
+    public void findPartiesNear_작동_테스트() {
         Party party1 = createPartyWithPointString("POINT (1 1)");
         createPartyWithPointString("POINT (1 2)");
         createPartyWithPointString("POINT (3 4)");
@@ -58,7 +66,18 @@ class PartyRepositoryTest {
     }
 
     @Test
-    public void 선릉역_주변의_2km_를_탐색하면_선릉역과_역삼역이_나온다() throws ParseException  {
+    public void findPartiesInGeom_작동_테스트() {
+        Party party1 = createPartyWithPointString("POINT (1 1)");
+        Party party2 = createPartyWithPointString("POINT (1 2)");
+        createPartyWithPointString("POINT (3 4)");
+        createPartyWithPointString("POINT (5 6)");
+
+        List<Party> parties = partyRepository.findPartiesInGeom("Polygon((0 0, 0 3, 3 3, 3 0, 0 0))");
+        assertThat(parties).containsOnly(party1, party2);
+    }
+
+    @Test
+    public void 선릉역_주변의_2km_를_탐색하면_선릉역과_역삼역이_나온다() {
         // Given: 선릉 역삼 마두
         String 선릉_point = "POINT (127.048995 37.504506)";
         Party 선릉 = createPartyWithPointString(선릉_point);

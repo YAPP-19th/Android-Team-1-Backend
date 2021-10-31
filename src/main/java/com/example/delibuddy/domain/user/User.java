@@ -1,11 +1,14 @@
 package com.example.delibuddy.domain.user;
 
 import com.example.delibuddy.domain.BaseTimeEntity;
+import com.example.delibuddy.domain.party.PartyUser;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -27,6 +30,9 @@ public class User extends BaseTimeEntity {
 
     @Column(length = 255)
     private String profileImage;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<PartyUser> parties = new ArrayList<>();
 
     @Builder
     public User(String nickName, String kakaoId, String email, String profileImage) {
