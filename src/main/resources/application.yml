@@ -2,7 +2,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/delibuddy?serverTimezone=UTC&characterEncoding=UTF-8
-    username: sw
+    username: root
     password: 22380476
   jpa:
     hibernate.ddl-auto: update
