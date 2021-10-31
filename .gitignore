@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 
 ### Resources ###
-src/main/resources/*
+src/main/resources/firebase-admin.json
 
 ### STS ###
 .apt_generated
