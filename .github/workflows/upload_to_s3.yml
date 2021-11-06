@@ -1,11 +1,10 @@
 
-name: upload to s3
+name: deploy to ec2
 
 on:
   push:
     branches:
     - main
-    - hj-deploy-to-codedeploy # only for test
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
