@@ -5,6 +5,7 @@ on:
   push:
     branches:
     - main
+    - - hj-change-port-to-80 # for test
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
