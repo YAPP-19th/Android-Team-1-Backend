@@ -28,7 +28,7 @@ class DelibuddyApplicationTests {
         JPAQueryFactory query = new JPAQueryFactory(em);
         QUser qUser = QUser.user;
 
-        User result = query.selectFrom(qUser).fetchOne();
+        User result = query.selectFrom(qUser).where(qUser.id.eq(user.getId())).fetchOne();
 
         assertThat(result).isEqualTo(user);
         assertThat(result.getId()).isEqualTo(user.getId());
