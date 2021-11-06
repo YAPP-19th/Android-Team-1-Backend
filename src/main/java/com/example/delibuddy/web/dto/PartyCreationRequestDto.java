@@ -12,6 +12,7 @@ import static com.example.delibuddy.util.GeoHelper.wktToGeometry;
 @Data
 @RequiredArgsConstructor
 public class PartyCreationRequestDto {
+    // TODO figma 랑 맞추기
     private final String title;
     private final String body;
     private final String coordinate;
