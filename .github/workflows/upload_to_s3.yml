@@ -1,5 +1,5 @@
 
-name: upload to s3
+name: deploy to ec2
 
 on:
   push:
@@ -62,8 +62,8 @@ jobs:
       - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://delibuddy/$GITHUB_SHA.zip
 
-#      - name: Code Deploy #4
-#        run: aws deploy create-deployment --application-name {애플리케이션 이름}
-#          --deployment-config-name CodeDeployDefault.OneAtATime
-#          --deployment-group-name {배포 그룹}
-#          --s3-location bucket={저장할 폴더},bundleType=zip,key=$GITHUB_SHA.zip
+      - name: Code Deploy #4
+        run: aws deploy create-deployment --application-name delibuddy-deploy
+          --deployment-config-name CodeDeployDefault.OneAtATime
+          --deployment-group-name delibuddy-production
+          --s3-location bucket=delibuddy,bundleType=zip,key=$GITHUB_SHA.zip

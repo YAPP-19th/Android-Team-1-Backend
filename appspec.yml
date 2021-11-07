@@ -1,0 +1,13 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /home/ubuntu/app/zip/
+    overwrite: yes
+
+hooks:
+  AfterInstall:
+    - location: scripts/deploy.sh
+      timeout: 60
+      runas: root
