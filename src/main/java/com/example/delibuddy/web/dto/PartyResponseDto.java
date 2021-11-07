@@ -1,10 +1,12 @@
 package com.example.delibuddy.web.dto;
 
 import com.example.delibuddy.domain.party.Party;
+import com.example.delibuddy.domain.party.PartyStatus;
 import com.example.delibuddy.domain.user.User;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +16,7 @@ public class PartyResponseDto {
     private final long id;
     private final String title;
     private final String body;
+    private final List<String> allStatuses = Arrays.stream(PartyStatus.values()).map(PartyStatus::getStatus).collect(Collectors.toList());
 
     public PartyResponseDto(Party entity) {
         id = entity.getId();

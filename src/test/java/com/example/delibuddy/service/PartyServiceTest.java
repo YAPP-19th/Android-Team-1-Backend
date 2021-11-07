@@ -60,19 +60,6 @@ class PartyServiceTest {
     }
 
     @Test
-    void 파티를_id로_조회할_수_있다() {
-        // Given: party 2개 생성
-        Party party1 = createParty();
-        Party party2 = createParty();
-
-        // When: party service 로 쿼리
-        PartyResponseDto partyDto = partyService.getParty(party1.getId());
-
-        // Then: party1 의 Dto 를 얻는다.
-        assertThat(new PartyResponseDto(party1)).isEqualTo(partyDto);
-    }
-
-    @Test
     void 파티장은_강퇴를_할_수_있다() {
         // Given: 내가 바로 파티장
         User me = userRepository.save(

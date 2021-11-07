@@ -75,4 +75,8 @@ public class Party extends BaseTimeEntity {
         body = dto.getBody() != null ? dto.getBody() : body;
         coordinate = dto.getCoordinate() != null ? dto.getPoint() : coordinate;
     }
+
+    public void setStatus(PartyStatus status) {
+        this.status = status;
+    }
 }

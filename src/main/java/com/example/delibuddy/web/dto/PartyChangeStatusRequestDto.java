@@ -12,12 +12,5 @@ import static com.example.delibuddy.util.GeoHelper.wktToGeometry;
 @Data
 @RequiredArgsConstructor
 public class PartyChangeStatusRequestDto {
-
     private final String status;
-
-    public PartyStatus getPartyStatus() {
-        // todo: PartyStatus 를 찾아서 리턴하자.
-        return PartyStatus.OPEN;
-    }
-
 }

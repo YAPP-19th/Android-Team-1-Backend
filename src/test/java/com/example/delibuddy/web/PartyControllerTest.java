@@ -2,9 +2,11 @@ package com.example.delibuddy.web;
 
 import com.example.delibuddy.domain.party.Party;
 import com.example.delibuddy.domain.party.PartyRepository;
+import com.example.delibuddy.domain.party.PartyStatus;
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
 import com.example.delibuddy.service.MyUserDetailsService;
+import com.example.delibuddy.web.dto.PartyChangeStatusRequestDto;
 import com.example.delibuddy.web.dto.PartyCreationRequestDto;
 import com.example.delibuddy.web.dto.PartyResponseDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,9 +47,11 @@ class PartyControllerTest {
     @Autowired
     private PartyController partyController;
 
+    private User user;
+
     @BeforeEach
     void setUp() {
-        User user = userRepository.save(
+        user = userRepository.save(
                 User.builder()
                         .nickName("test")
                         .kakaoId("test-kakao-id")
@@ -80,6 +84,16 @@ class PartyControllerTest {
 
     @Test
     void changeStatus() {
+        // Given
+        Party party = partyRepository.save(Party.builder().leader(user).build());
+        String status = PartyStatus.ORDERING.getStatus();
+
+        // When: status 변경
+        partyController.changeStatus(new PartyChangeStatusRequestDto(status), party.getId());
+
+        // Then:
+        party = partyRepository.getById(party.getId());
+        assertThat(party.getStatus().getStatus()).isEqualTo(status);
     }
 
     @Test
@@ -100,6 +114,16 @@ class PartyControllerTest {
 
     @Test
     void getParty() {
+        // Given: 선릉에 파티 둘
+        String 선릉_point = "POINT (127.048995 37.504506)";
+        Party 선릉1 = createPartyWithPointString(partyRepository, 선릉_point);
+        Party 선릉2 = createPartyWithPointString(partyRepository, 선릉_point);
+
+        // When: 하나만 아이디로 조횐
+        PartyResponseDto party = partyController.getParty(선릉1.getId());
+
+        // Then: 조회 성공
+        assertThat(party.getId()).isEqualTo(선릉1.getId());
     }
 
     @Test
@@ -117,5 +141,6 @@ class PartyControllerTest {
 
     @Test
     void getPartiesInGeom() {
+        // 2021-11-06 지도 탭이 송두리째 날아갔습니다 ㅎㅎ
     }
 }
