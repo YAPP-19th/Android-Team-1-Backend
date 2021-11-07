@@ -80,6 +80,7 @@ class PartyControllerTest {
 
     @Test
     void editParty() {
+
     }
 
     @Test
@@ -98,6 +99,15 @@ class PartyControllerTest {
 
     @Test
     void deleteParty() {
+        // Given: 파티 하나 주어짐
+        Party party = partyRepository.save(Party.builder().leader(user).build());
+
+        // When: 파티 삭제!
+        partyController.deleteParty(party.getId());
+
+        // Then: 데이터베이스에서 삭제됩니다.
+        // TODO: 컨트롤러 레밸의 테스트에서 repository 를 써서 데이터베이스를 확인하는게 과연 맞나?
+        assertThat(partyRepository.findById(party.getId()).isPresent()).isFalse();
     }
 
     @Test
