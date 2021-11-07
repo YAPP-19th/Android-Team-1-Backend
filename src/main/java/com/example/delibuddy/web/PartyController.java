@@ -71,8 +71,7 @@ public class PartyController {
     }
 
     @GetMapping("${api.v1}/parties/circle")
-    public List<PartyResponseDto> getPartiesInCircle(@RequestParam String point, @RequestParam int distance, @RequestParam String categories) {
-        // todo: category 의 리스트도 조건에 포함되도록, query dsl 로 구현해보자.
+    public List<PartyResponseDto> getPartiesInCircle(@RequestParam String point, @RequestParam int distance) {
         return partyService.getPartiesInCircle(point, distance);
     }
 

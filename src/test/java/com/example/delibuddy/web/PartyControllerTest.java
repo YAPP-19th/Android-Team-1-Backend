@@ -1,5 +1,7 @@
 package com.example.delibuddy.web;
 
+import com.example.delibuddy.domain.party.Party;
+import com.example.delibuddy.domain.party.PartyRepository;
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
 import com.example.delibuddy.service.MyUserDetailsService;
@@ -15,9 +17,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import static com.example.delibuddy.testhelper.PartyTestHelper.createPartyWithPointString;
 import static org.assertj.core.api.Assertions.assertThat;
-
 
 @SpringBootTest
 @Transactional
@@ -35,6 +38,9 @@ class PartyControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PartyRepository partyRepository;
 
     @Autowired
     private PartyController partyController;
@@ -98,6 +104,15 @@ class PartyControllerTest {
 
     @Test
     void getPartiesInCircle() {
+        // Given: 선릉에 파티 하나
+        String 선릉_point = "POINT (127.048995 37.504506)";
+        Party 선릉 = createPartyWithPointString(partyRepository, 선릉_point);
+
+        // When: 검색
+        List<PartyResponseDto> partiesInCircle = partyController.getPartiesInCircle(선릉_point, 2000);
+
+        // Then: 검색 결과에 반환
+        assertThat(partiesInCircle.stream().map(PartyResponseDto::getId)).contains(선릉.getId());
     }
 
     @Test
