@@ -34,8 +34,9 @@ public class PartyController {
     }
 
     @GetMapping("${api.v1}/parties/geom")
-    public <List> PartyResponseDto[] getPartiesInGeom() {
-        return new PartyResponseDto[] {new PartyResponseDto(1L, "", "")};
+    public List<PartyResponseDto> getPartiesInGeom() {
+        // 초기 기획에서 제거 되었어요~
+        return partyService.getPartiesInGeom("");
     }
 
     @PutMapping("${api.v1}/parties/{id}")
