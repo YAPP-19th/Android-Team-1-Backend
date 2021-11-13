@@ -99,6 +99,19 @@ public class PartyService {
     }
 
     @Transactional
+    public void leave(Long partyId, String userKakaoId) {
+        User user = userRepository.findByKakaoId(userKakaoId).get();
+        Party party = partyRepository.getById(partyId);
+
+        if (!party.isIn(user)) {
+            throw new IllegalArgumentException("가입되어 있지 않은 파티입니다.");
+        }
+
+        party.leave(partyUserRepository.findByPartyIdAndUserId(party.getId(), user.getId()).get());
+        partyUserRepository.deleteByPartyIdAndUserId(party.getId(), user.getId());
+    }
+
+    @Transactional
     public void edit(String leaderKakaoId, Long partyId, PartyEditRequestDto dto) {
         Party party = partyRepository.getById(partyId);
         User leader = userRepository.findByKakaoId(leaderKakaoId).get();
@@ -133,7 +146,7 @@ public class PartyService {
 
     @Transactional(readOnly = true)
     public List<PartyResponseDto> getPartiesInGeom(String wkt) {
-        // TODO: 테스트 필요
+        // 초기 기획에서 제외되었습니다~
         return partyRepository.findPartiesInGeom(wkt).stream()
                 .map(PartyResponseDto::new)
                 .collect(Collectors.toList());

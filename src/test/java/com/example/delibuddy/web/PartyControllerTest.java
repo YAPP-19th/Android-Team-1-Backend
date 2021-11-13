@@ -1,14 +1,11 @@
 package com.example.delibuddy.web;
 
-import com.example.delibuddy.domain.party.Party;
-import com.example.delibuddy.domain.party.PartyRepository;
-import com.example.delibuddy.domain.party.PartyStatus;
+import com.example.delibuddy.domain.ban.BanRepository;
+import com.example.delibuddy.domain.party.*;
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
 import com.example.delibuddy.service.MyUserDetailsService;
-import com.example.delibuddy.web.dto.PartyChangeStatusRequestDto;
-import com.example.delibuddy.web.dto.PartyCreationRequestDto;
-import com.example.delibuddy.web.dto.PartyResponseDto;
+import com.example.delibuddy.web.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.delibuddy.testhelper.PartyTestHelper.createPartyWithPointString;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,6 +41,12 @@ class PartyControllerTest {
 
     @Autowired
     private PartyRepository partyRepository;
+
+    @Autowired
+    private PartyUserRepository partyUserRepository;
+
+    @Autowired
+    private BanRepository banRepository;
 
     @Autowired
     private PartyController partyController;
@@ -80,7 +84,15 @@ class PartyControllerTest {
 
     @Test
     void editParty() {
+        // Given: 파티
+        Party party = partyRepository.save(Party.builder().leader(user).build());
+        String title = "안녕?";
 
+        // When: 파티 수정 요청을 보낸다
+        partyController.editParty(new PartyEditRequestDto(title, "파티", "(2 2)"), party.getId());
+
+        // Then: 파티 제목이 수정되었다!
+        assertThat(partyRepository.getById(party.getId()).getTitle()).isEqualTo(title);
     }
 
     @Test
@@ -106,20 +118,76 @@ class PartyControllerTest {
         partyController.deleteParty(party.getId());
 
         // Then: 데이터베이스에서 삭제됩니다.
-        // TODO: 컨트롤러 레밸의 테스트에서 repository 를 써서 데이터베이스를 확인하는게 과연 맞나?
+        // 컨트롤러 레밸의 테스트에서 repository 를 써서 데이터베이스를 확인하는게 과연 맞나?
+        // 음.. 안될 게 뭐람?
         assertThat(partyRepository.findById(party.getId()).isPresent()).isFalse();
     }
 
     @Test
     void joinParty() {
+        // Given: 유저2와 그의 파티
+        User user2 = userRepository.save(
+                User.builder()
+                        .nickName("test2")
+                        .kakaoId("test-kakao-id2")
+                        .build()
+        );
+        Party party = partyRepository.save(Party.builder().leader(user2).build());
+
+        // When: user 가 파티에 조인
+        OkayDto okayDto = partyController.joinParty(party.getId());
+
+        // Then: 파티의 Users 에 포함!
+        assertThat(
+            partyRepository.getById(party.getId())
+            .getUsers().stream().map(PartyUser::getUser).collect(Collectors.toList())
+        ).contains(user);
+        assertThat(okayDto.isOkay()).isTrue();
     }
 
     @Test
     void leaveParty() {
+        // Given: 유저2와 그의 파티
+        User user2 = userRepository.save(
+                User.builder()
+                        .nickName("test2")
+                        .kakaoId("test-kakao-id2")
+                        .build()
+        );
+        Party party = partyRepository.save(Party.builder().leader(user2).build());
+        PartyUser partyUser = partyUserRepository.save(new PartyUser(user, party));
+        party.join(partyUser);
+
+        // When: 파티를 떠난다.
+        OkayDto okayDto = partyController.leaveParty(party.getId());
+
+        // Then: 파티의 Users 에서 제거 되었다.
+        assertThat(
+            partyRepository.getById(party.getId())
+            .getUsers().stream().map(PartyUser::getUser).collect(Collectors.toList())
+        ).doesNotContain(user);
+        assertThat(okayDto.isOkay()).isTrue();
     }
 
     @Test
     void banFromParty() {
+        // Given: 유저1과 그의 파티
+        User user2 = userRepository.save(
+                User.builder()
+                        .nickName("test2")
+                        .kakaoId("test-kakao-id2")
+                        .build()
+        );
+        Party party = partyRepository.save(Party.builder().leader(user).build());
+        PartyUser partyUser = partyUserRepository.save(new PartyUser(user2, party));
+        party.join(partyUser);
+
+        // When: 강티~
+        OkayDto okayDto = partyController.banFromParty(party.getId(), new PartyBanRequestDto(user2.getId()));
+
+        // Then: 파티에서 퇴출 완료! Ban 기록이 남습니다.
+        assertThat(banRepository.findByPartyIdAndUserId(party.getId(), user2.getId()).isPresent()).isTrue();
+        assertThat(okayDto.isOkay()).isTrue();
     }
 
     @Test

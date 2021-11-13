@@ -60,35 +60,6 @@ class PartyServiceTest {
     }
 
     @Test
-    void 파티장은_강퇴를_할_수_있다() {
-        // Given: 내가 바로 파티장
-        User me = userRepository.save(
-                User.builder()
-                        .nickName("test")
-                        .kakaoId("test-kakao-id")
-                        .build()
-        );
-
-        User you = userRepository.save(
-                User.builder()
-                        .nickName("test2")
-                        .kakaoId("test-kakao-id2")
-                        .build()
-        );
-        Party party = partyRepository.save(Party.builder().leader(me).build());
-        partyService.join(party.getId(), you.getKakaoId());
-
-        // When: 파티장이 한다 강퇴를
-        partyService.ban(me.getKakaoId(), party.getId(), you.getId());
-
-        // Then: 파티에서 퇴출 완료! Ban 기록이 남습니다.
-        Party resultParty = partyRepository.getById(party.getId());
-        assertThat(resultParty.isIn(you)).isFalse();
-        assertThat(banRepository.findByPartyIdAndUserId(resultParty.getId(), you.getId()).isPresent()).isTrue();
-
-    }
-
-    @Test
     void 파티장이_아니라면_강퇴할_수_없다() {
         // Given: 파티장과 너와 이상한 사람.
         User me = userRepository.save(
@@ -226,25 +197,6 @@ class PartyServiceTest {
                 IllegalArgumentException.class,
                 () -> partyService.edit(you.getKakaoId(), party.getId(), new PartyEditRequestDto("안녕", "파티", "(2 2)"))
         );
-    }
-
-    @Test
-    void 파티수정을_통해_title_을_바꿀_수_있다() {
-        // Given: 유저와 파티
-        User me = userRepository.save(
-                User.builder()
-                        .nickName("test")
-                        .kakaoId("test-kakao-id")
-                        .build()
-        );
-        Party party = partyRepository.save(Party.builder().leader(me).build());
-        String title = "김치";
-
-        // When: 파티 수정 요청을 보낸다
-        partyService.edit(me.getKakaoId(), party.getId(), new PartyEditRequestDto(title, "파티", "(2 2)"));
-
-        // Then: 파티 제목이 수정되었다!
-        assertThat(partyRepository.getById(party.getId()).getTitle()).isEqualTo(title);
     }
 
     @Test
