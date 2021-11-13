@@ -38,7 +38,9 @@ public class PartyService {
 
     @Transactional(readOnly = true)
     public PartyResponseDto getParty(Long id) {
-        return new PartyResponseDto(partyRepository.getById(id));
+        return new PartyResponseDto(
+            partyRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 파티가 없습니다. id=" + id))
+        );
     }
 
     @Transactional(readOnly = true)
