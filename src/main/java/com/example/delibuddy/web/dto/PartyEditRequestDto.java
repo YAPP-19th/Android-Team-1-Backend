@@ -1,5 +1,6 @@
 package com.example.delibuddy.web.dto;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
@@ -17,6 +18,13 @@ public class PartyEditRequestDto {
     private String title;
     private String body;
     private String coordinate;
+
+    @Builder
+    public PartyEditRequestDto(String title, String body, String coordinate) {
+        this.title = title;
+        this.body = body;
+        this.coordinate = coordinate;
+    }
 
     public Point getPoint() {
         try {
