@@ -41,7 +41,7 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User writer;
 
-    private Boolean isDeleted;
+    private Boolean isDeleted = Boolean.FALSE;
 
     @Builder
     public Comment(Comment parent, String body, Party party, User writer){
