@@ -45,24 +45,24 @@ public class PartyController {
     }
 
     @PostMapping("${api.v1}/parties/{id}/join")
-    public PartyResponseDto joinParty(@PathVariable Long id) {
+    public OkayDto joinParty(@PathVariable Long id) {
         // 이것도 okay 만 보내면 될 듯?
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         partyService.join(id, userDetails.getUsername());
-        return new PartyResponseDto(1L, "", "");
+        return new OkayDto();
     }
 
     @PostMapping("${api.v1}/parties/{id}/leave")
-    public PartyResponseDto leaveParty(@RequestParam Long id) {
+    public OkayDto leaveParty(@RequestParam Long id) {
         // 이것도 okay 만 보내면 될 듯?
-        return new PartyResponseDto(1L, "", "");
+        return new OkayDto();
     }
 
     @PostMapping("${api.v1}/parties/{id}/ban")
-    public PartyResponseDto banFromParty(@RequestParam Long id, @RequestBody PartyBanRequestDto partyBanRequestDto) {
+    public OkayDto banFromParty(@RequestParam Long id, @RequestBody PartyBanRequestDto partyBanRequestDto) {
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         partyService.ban(userDetails.getUsername(), id, partyBanRequestDto.getTargetId());
-        return new PartyResponseDto(1L, "", "");
+        return new OkayDto();
     }
 
     @GetMapping("${api.v1}/parties/{id}") // url parameter
@@ -77,7 +77,7 @@ public class PartyController {
     }
 
     @GetMapping("${api.v1}/parties/geom")
-    public <List> PartyResponseDto[] getPartiesInGeom() {
-        return new PartyResponseDto[] {new PartyResponseDto(1L, "", "")};
+    public OkayDto getPartiesInGeom() {
+        return new OkayDto();
     }
 }

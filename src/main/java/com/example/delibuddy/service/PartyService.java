@@ -3,10 +3,7 @@ package com.example.delibuddy.service;
 
 import com.example.delibuddy.domain.ban.Ban;
 import com.example.delibuddy.domain.ban.BanRepository;
-import com.example.delibuddy.domain.party.Party;
-import com.example.delibuddy.domain.party.PartyUser;
-import com.example.delibuddy.domain.party.PartyUserRepository;
-import com.example.delibuddy.domain.party.PartyRepository;
+import com.example.delibuddy.domain.party.*;
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
 import com.example.delibuddy.web.dto.PartyCreationRequestDto;
@@ -28,6 +25,7 @@ public class PartyService {
     private final UserRepository userRepository;
     private final PartyUserRepository partyUserRepository;
     private final BanRepository banRepository;
+    private final PartyFactory partyFactory;
 
     public void ban(String leaderKakaoId, Long partyId, Long targetId) {
         Party party = partyRepository.getById(partyId);
@@ -83,10 +81,9 @@ public class PartyService {
     @Transactional
     public PartyResponseDto create(String leaderKakaoId, PartyCreationRequestDto dto) {
         User leader = userRepository.findByKakaoId(leaderKakaoId).get();
-        Party party = dto.toEntity(leader);
+        Party party = partyFactory.createParty(dto, leader);
         partyRepository.save(party);
-        PartyUser partyUser = partyUserRepository.save(PartyUser.builder().user(leader).party(party).build());
-        party.join(partyUser);
+        party.join(partyUserRepository.save(PartyUser.builder().user(leader).party(party).build()));
         return new PartyResponseDto(party);
     }
 

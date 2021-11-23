@@ -1,6 +1,7 @@
 package com.example.delibuddy.domain.party;
 
 import com.example.delibuddy.domain.BaseTimeEntity;
+import com.example.delibuddy.domain.category.Category;
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.web.dto.PartyEditRequestDto;
 import com.example.delibuddy.web.dto.PartyResponseDto;
@@ -31,6 +32,13 @@ public class Party extends BaseTimeEntity {
     @OneToMany(mappedBy = "party", fetch = FetchType.LAZY)
     private List<PartyUser> users = new ArrayList<>();
 
+    @Column
+    private Integer targetUserCount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @Column(columnDefinition = "CHAR(255)")
     private String title;
 
@@ -50,7 +58,8 @@ public class Party extends BaseTimeEntity {
     private LocalDateTime orderTime;
 
     @Builder
-    public Party(User leader, Point coordinate, String title, String body, String placeName, LocalDateTime orderTime) {
+    public Party(User leader, Point coordinate, String title, String body, String placeName, LocalDateTime orderTime,
+    Integer targetUserCount, Category category) {
         this.leader = leader;
         this.coordinate = coordinate;
         this.title = title;
@@ -58,6 +67,8 @@ public class Party extends BaseTimeEntity {
         this.placeName = placeName;
         this.orderTime = orderTime;
         this.status = PartyStatus.OPEN;
+        this.targetUserCount = targetUserCount;
+        this.category = category;
     }
 
     public boolean isIn(User user) {

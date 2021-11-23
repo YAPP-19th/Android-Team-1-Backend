@@ -1,29 +1,19 @@
 package com.example.delibuddy.web.dto;
 
-import com.example.delibuddy.domain.party.Party;
-import com.example.delibuddy.domain.user.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.io.ParseException;
+import lombok.NoArgsConstructor;
 
-import static com.example.delibuddy.util.GeoHelper.wktToGeometry;
+import java.time.LocalDateTime;
 
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class PartyCreationRequestDto {
-    private final String title;
-    private final String body;
-    private final String coordinate;
-
-    public Party toEntity(User leader) {
-        Point point;
-        try {
-            point = (Point) wktToGeometry("POINT " + coordinate);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("coordinate 값이 잘못되었습니다.");
-        }
-
-        return Party.builder().title(title).body(body).leader(leader).coordinate(point).build();
-    }
+    private String title;
+    private String body;
+    private String coordinate;
+    private Long categoryId;
+    private Integer targetUserCount;
+    private LocalDateTime orderTime;
 }

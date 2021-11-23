@@ -1,6 +1,8 @@
 package com.example.delibuddy.service;
 
 import com.example.delibuddy.domain.ban.BanRepository;
+import com.example.delibuddy.domain.category.Category;
+import com.example.delibuddy.domain.category.CategoryRepository;
 import com.example.delibuddy.domain.party.Party;
 import com.example.delibuddy.domain.party.PartyRepository;
 import com.example.delibuddy.domain.party.PartyUser;
@@ -17,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
+
+import java.time.LocalDateTime;
 
 import static com.example.delibuddy.util.GeoHelper.wktToGeometry;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,6 +45,9 @@ class PartyServiceTest {
     @Autowired
     private BanRepository banRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     private Party createParty() {
         Point point;
         try {
@@ -57,19 +64,6 @@ class PartyServiceTest {
                 .build();
         partyRepository.save(party);
         return party;
-    }
-
-    @Test
-    void 파티를_id로_조회할_수_있다() {
-        // Given: party 2개 생성
-        Party party1 = createParty();
-        Party party2 = createParty();
-
-        // When: party service 로 쿼리
-        PartyResponseDto partyDto = partyService.getParty(party1.getId());
-
-        // Then: party1 의 Dto 를 얻는다.
-        assertThat(new PartyResponseDto(party1)).isEqualTo(partyDto);
     }
 
     @Test
@@ -146,10 +140,12 @@ class PartyServiceTest {
                         .build()
         );
 
+        Category category = categoryRepository.save(new Category("HiCategory"));
+
         // When: 파티 생성
         PartyResponseDto dto = partyService.create(
             me.getKakaoId(),
-            new PartyCreationRequestDto("my party", "body", "(1 1)")
+            new PartyCreationRequestDto("my party", "body", "(1 1)", category.getId(), 5, LocalDateTime.now())
         );
 
         // Then: 잘 생성된당

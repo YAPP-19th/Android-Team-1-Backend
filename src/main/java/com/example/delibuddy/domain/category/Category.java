@@ -15,7 +15,11 @@ public class Category extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 30)
+    @Column(length = 30) // todo: unique True 걸까...?
     private String name;
+
+    public Category(String name) {
+        this.name = name;
+    }
 
 }
