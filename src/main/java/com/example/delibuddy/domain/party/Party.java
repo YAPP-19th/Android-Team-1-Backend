@@ -29,7 +29,7 @@ public class Party extends BaseTimeEntity {
     @JoinColumn(name = "leader_id")
     private User leader;
 
-    @OneToMany(mappedBy = "party", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "party", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PartyUser> users = new ArrayList<>();
 
     @Column
