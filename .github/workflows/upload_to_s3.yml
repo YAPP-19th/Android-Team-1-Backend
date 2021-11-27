@@ -5,7 +5,6 @@ on:
   push:
     branches:
     - main
-    - hj-deploy-to-codedeploy # for test
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
