@@ -153,7 +153,7 @@ public class CommentServiceTest {
                 .build());
 
         //when : 댓글을 삭제한다.
-        commentService.delete(comment.getId());
+        commentService.delete(comment.getId(), writer.getKakaoId());
 
 
         //then : 댓글이 뾰로롱~ 삭제 된다. 댓글을 불러오려고 하면 예외 터짐
@@ -187,7 +187,7 @@ public class CommentServiceTest {
         child.setParent(parent);
 
         //when : 부모 댓글을 삭제한다.
-        commentService.delete(parent.getId());
+        commentService.delete(parent.getId(), writer.getKakaoId());
 
         //then : 댓글 삭제는 안되고, isDeleted 만 참으로 설정됨
         Comment comment = commentRepository.getById(parent.getId());

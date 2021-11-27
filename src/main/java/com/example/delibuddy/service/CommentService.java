@@ -9,10 +9,12 @@ import com.example.delibuddy.domain.user.UserRepository;
 import com.example.delibuddy.web.dto.CommentCreationRequestDto;
 import com.example.delibuddy.web.dto.CommentResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -21,12 +23,12 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
-//    @Transactional(readOnly = true)
-//    public List<CommentResponseDto> getCommentsInParty(Long partyId) {
-//        // TODO 댓글은 작성 시간순 정렬, 댓글 아래에 대댓글이 보이게 출력
-//        // TODO 삭제됐지만 자식 댓글이 있는 경우 "삭제된 댓글입니다"로 출력
-//    }
-
+    @Transactional(readOnly = true)
+    public List<CommentResponseDto> getCommentsInParty(Long partyId) {
+        return commentRepository.findByPartyAndParentIsNull(partyRepository.getById(partyId), Sort.by(Sort.Direction.ASC, "id")).stream()
+                .map(CommentResponseDto::new)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public CommentResponseDto create(CommentCreationRequestDto dto, String writerKakaoId) {
@@ -49,9 +51,14 @@ public class CommentService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(Long id, String writerKakaoId) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("comment 가 없습니다."));
+        User writer = userRepository.findByKakaoId(writerKakaoId).get();
+        if (!writer.getId().equals(comment.getWriter().getId())) {
+            throw new IllegalArgumentException("작성자만 댓글을 수정할 수 있습니다.");
+        }
+
         if(comment.getChildren().size() != 0) {
             comment.setAsIsDeleted();
         } else {
