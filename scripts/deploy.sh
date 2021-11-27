@@ -9,7 +9,7 @@ cp $REPOSITORY/zip/build/libs/*.jar $REPOSITORY/
 
 echo "> 현재 구동중인 애플리케이션 pid 확인"
 
-CURRENT_PID=$(pgrep -fl delibuddy | grep jar | awk '{print $1}')
+CURRENT_PID=$(pgrep -f delibuddy)
 
 echo "현재 구동중인 어플리케이션 pid: $CURRENT_PID"
 
