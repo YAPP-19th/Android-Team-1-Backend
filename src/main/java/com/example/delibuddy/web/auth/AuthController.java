@@ -29,8 +29,8 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST) // PostMapping 으로 바꾸기
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequestDto authenticationRequestDto) throws Exception {
-        KakaoMyInfo kakaoMyinfo = null;
+    public AuthenticationResponseDto createAuthenticationToken(@RequestBody AuthenticationRequestDto authenticationRequestDto) throws Exception {
+        KakaoMyInfo kakaoMyinfo;
 
         try {
             kakaoMyinfo = getKakaoMyInfo(authenticationRequestDto.getToken());
@@ -43,6 +43,6 @@ public class AuthController {
 
         final String jwt = jwtUtil.generateToken(user.getKakaoId());
 
-        return ResponseEntity.ok(new AuthenticationResponseDto(jwt));
+        return new AuthenticationResponseDto(jwt);
     }
 }
