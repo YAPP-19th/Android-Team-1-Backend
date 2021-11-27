@@ -28,7 +28,7 @@ public class PartyEditRequestDto {
 
     public Point getPoint() {
         try {
-            return (Point) wktToGeometry("POINT " + coordinate);
+            return (Point) wktToGeometry(coordinate);
         } catch (ParseException e) {
             throw new IllegalArgumentException("coordinate 값이 잘못되었습니다.");
         }
