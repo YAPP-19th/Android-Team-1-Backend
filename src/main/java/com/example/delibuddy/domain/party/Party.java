@@ -8,6 +8,8 @@ import com.example.delibuddy.web.dto.PartyResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
@@ -29,6 +31,7 @@ public class Party extends BaseTimeEntity {
     @JoinColumn(name = "leader_id")
     private User leader;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)  // https://stackoverflow.com/questions/14875793/jpa-hibernate-how-to-define-a-constraint-having-on-delete-cascade
     @OneToMany(mappedBy = "party", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PartyUser> users = new ArrayList<>();
 
