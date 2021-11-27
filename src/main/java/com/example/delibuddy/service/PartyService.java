@@ -27,6 +27,38 @@ public class PartyService {
     private final BanRepository banRepository;
     private final PartyFactory partyFactory;
 
+    @Transactional
+    public PartyResponseDto create(String leaderKakaoId, PartyCreationRequestDto dto) {
+        User leader = userRepository.findByKakaoId(leaderKakaoId).get();
+        Party party = partyFactory.createParty(dto, leader);
+        partyRepository.save(party);
+        party.join(partyUserRepository.save(PartyUser.builder().user(leader).party(party).build()));
+        return new PartyResponseDto(party);
+    }
+
+    @Transactional(readOnly = true)
+    public PartyResponseDto getParty(Long id) {
+        return new PartyResponseDto(
+            partyRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 파티가 없습니다. id=" + id))
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public List<PartyResponseDto> getPartiesInCircle(String point, int distance) {
+        return partyRepository.findPartiesNear(point, distance).stream()
+                .map(PartyResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PartyResponseDto> getMyParties(String point, int distance) {
+        // TODO: 구현하기
+        return partyRepository.findPartiesNear(point, distance).stream()
+                .map(PartyResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     public void ban(String leaderKakaoId, Long partyId, Long targetId) {
         Party party = partyRepository.getById(partyId);
         User leader = userRepository.findByKakaoId(leaderKakaoId).get();
@@ -49,6 +81,7 @@ public class PartyService {
         banRepository.save(Ban.builder().party(party).user(target).build());
     }
 
+    @Transactional
     public void join(Long partyId, String userKakaoId) {
         User user = userRepository.findByKakaoId(userKakaoId).get();
 
@@ -67,6 +100,20 @@ public class PartyService {
         party.join(partyUser);
     }
 
+    @Transactional
+    public void leave(Long partyId, String userKakaoId) {
+        User user = userRepository.findByKakaoId(userKakaoId).get();
+        Party party = partyRepository.getById(partyId);
+
+        if (!party.isIn(user)) {
+            throw new IllegalArgumentException("가입되어 있지 않은 파티입니다.");
+        }
+
+        party.leave(partyUserRepository.findByPartyIdAndUserId(party.getId(), user.getId()).get());
+        partyUserRepository.deleteByPartyIdAndUserId(party.getId(), user.getId());
+    }
+
+    @Transactional
     public void edit(String leaderKakaoId, Long partyId, PartyEditRequestDto dto) {
         Party party = partyRepository.getById(partyId);
         User leader = userRepository.findByKakaoId(leaderKakaoId).get();
@@ -79,12 +126,15 @@ public class PartyService {
     }
 
     @Transactional
-    public PartyResponseDto create(String leaderKakaoId, PartyCreationRequestDto dto) {
+    public void changeStatus(String leaderKakaoId, Long partyId, String status) {
+        Party party = partyRepository.getById(partyId);
         User leader = userRepository.findByKakaoId(leaderKakaoId).get();
-        Party party = partyFactory.createParty(dto, leader);
-        partyRepository.save(party);
-        party.join(partyUserRepository.save(PartyUser.builder().user(leader).party(party).build()));
-        return new PartyResponseDto(party);
+
+        if (!leader.getId().equals(party.getLeader().getId())) {
+            throw new IllegalArgumentException("파티장만 파티를 수정할 수 있습니다.");
+        }
+
+        party.setStatus(PartyStatus.statusBy(status));
     }
 
     @Transactional
@@ -97,31 +147,10 @@ public class PartyService {
     }
 
     @Transactional(readOnly = true)
-    public PartyResponseDto getParty(Long id) {
-        return new PartyResponseDto(partyRepository.getById(id));
-    }
-
-    @Transactional(readOnly = true)
-    public List<PartyResponseDto> getPartiesInCircle(String point, int distance) {
-        return partyRepository.findPartiesNear(point, distance).stream()
-                .map(PartyResponseDto::new)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
     public List<PartyResponseDto> getPartiesInGeom(String wkt) {
-        // TODO: 테스트 필요
+        // 초기 기획에서 제외되었습니다~
         return partyRepository.findPartiesInGeom(wkt).stream()
                 .map(PartyResponseDto::new)
                 .collect(Collectors.toList());
     }
-
-    @Transactional(readOnly = true)
-    public List<PartyResponseDto> getMyParties(String point, int distance) {
-        // TODO: 구현하기
-        return partyRepository.findPartiesNear(point, distance).stream()
-                .map(PartyResponseDto::new)
-                .collect(Collectors.toList());
-    }
-
 }

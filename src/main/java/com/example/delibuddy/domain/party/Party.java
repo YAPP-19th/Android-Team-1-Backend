@@ -83,10 +83,18 @@ public class Party extends BaseTimeEntity {
         users.add(partyUser);
         partyUser.getUser().getParties().add(partyUser);
     }
+    public void leave(PartyUser partyUser) {
+        users.remove(partyUser);
+        partyUser.getUser().getParties().remove(partyUser);
+    }
 
     public void edit(PartyEditRequestDto dto) {
         title = dto.getTitle() != null ? dto.getTitle() : title;
         body = dto.getBody() != null ? dto.getBody() : body;
         coordinate = dto.getCoordinate() != null ? dto.getPoint() : coordinate;
+    }
+
+    public void setStatus(PartyStatus status) {
+        this.status = status;
     }
 }

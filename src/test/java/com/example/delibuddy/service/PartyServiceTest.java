@@ -43,9 +43,6 @@ class PartyServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private BanRepository banRepository;
-
-    @Autowired
     private CategoryRepository categoryRepository;
 
     private Party createParty() {
@@ -64,35 +61,6 @@ class PartyServiceTest {
                 .build();
         partyRepository.save(party);
         return party;
-    }
-
-    @Test
-    void 파티장은_강퇴를_할_수_있다() {
-        // Given: 내가 바로 파티장
-        User me = userRepository.save(
-                User.builder()
-                        .nickName("test")
-                        .kakaoId("test-kakao-id")
-                        .build()
-        );
-
-        User you = userRepository.save(
-                User.builder()
-                        .nickName("test2")
-                        .kakaoId("test-kakao-id2")
-                        .build()
-        );
-        Party party = partyRepository.save(Party.builder().leader(me).build());
-        partyService.join(party.getId(), you.getKakaoId());
-
-        // When: 파티장이 한다 강퇴를
-        partyService.ban(me.getKakaoId(), party.getId(), you.getId());
-
-        // Then: 파티에서 퇴출 완료! Ban 기록이 남습니다.
-        Party resultParty = partyRepository.getById(party.getId());
-        assertThat(resultParty.isIn(you)).isFalse();
-        assertThat(banRepository.findByPartyIdAndUserId(resultParty.getId(), you.getId()).isPresent()).isTrue();
-
     }
 
     @Test
@@ -129,7 +97,6 @@ class PartyServiceTest {
         System.out.println("illegalArgumentException = " + illegalArgumentException);
     }
 
-
     @Test
     void 파티장도_파티멤버다() {
         // Given: 사람 한 명
@@ -140,7 +107,7 @@ class PartyServiceTest {
                         .build()
         );
 
-        Category category = categoryRepository.save(new Category("HiCategory"));
+        Category category = categoryRepository.save(new Category("HiCategory", "Hi"));
 
         // When: 파티 생성
         PartyResponseDto dto = partyService.create(
@@ -235,25 +202,6 @@ class PartyServiceTest {
                 IllegalArgumentException.class,
                 () -> partyService.edit(you.getKakaoId(), party.getId(), new PartyEditRequestDto("안녕", "파티", "(2 2)"))
         );
-    }
-
-    @Test
-    void 파티수정을_통해_title_을_바꿀_수_있다() {
-        // Given: 유저와 파티
-        User me = userRepository.save(
-                User.builder()
-                        .nickName("test")
-                        .kakaoId("test-kakao-id")
-                        .build()
-        );
-        Party party = partyRepository.save(Party.builder().leader(me).build());
-        String title = "김치";
-
-        // When: 파티 수정 요청을 보낸다
-        partyService.edit(me.getKakaoId(), party.getId(), new PartyEditRequestDto(title, "파티", "POINT (2 2)"));
-
-        // Then: 파티 제목이 수정되었다!
-        assertThat(partyRepository.getById(party.getId()).getTitle()).isEqualTo(title);
     }
 
     @Test

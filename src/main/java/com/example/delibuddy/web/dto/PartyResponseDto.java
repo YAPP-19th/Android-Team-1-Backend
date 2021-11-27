@@ -7,6 +7,11 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import com.example.delibuddy.domain.party.PartyStatus;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @RequiredArgsConstructor
@@ -21,6 +26,8 @@ public class PartyResponseDto {
 
     @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
     private final LocalDateTime orderTime; // TODO: db 에는 9시간 전으로 들어감... timezone 문제가 있는 듯... mysql connection string 에서 serverTimeZone UTC+9 같은걸 해야 하나?
+
+    private final List<String> allStatuses = Arrays.stream(PartyStatus.values()).map(PartyStatus::getStatus).collect(Collectors.toList());
 
     public PartyResponseDto(Party entity) {
         id = entity.getId();
