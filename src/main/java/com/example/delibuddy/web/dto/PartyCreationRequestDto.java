@@ -1,8 +1,10 @@
 package com.example.delibuddy.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -15,5 +17,7 @@ public class PartyCreationRequestDto {
     private String coordinate;
     private Long categoryId;
     private Integer targetUserCount;
+
+    @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
     private LocalDateTime orderTime;
 }
