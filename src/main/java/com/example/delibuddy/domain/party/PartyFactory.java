@@ -19,7 +19,7 @@ public class PartyFactory {
     public Party createParty(PartyCreationRequestDto dto, User leader) {
         Point point;
         try {
-            point = (Point) wktToGeometry("POINT " + dto.getCoordinate()); // TODO: 'POINT' 도 클라에서 받도록
+            point = (Point) wktToGeometry(dto.getCoordinate());
         } catch (ParseException e) {
             throw new IllegalArgumentException("coordinate 값이 잘못되었습니다.");
         }

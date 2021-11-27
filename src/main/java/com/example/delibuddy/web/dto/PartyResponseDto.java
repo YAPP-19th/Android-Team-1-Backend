@@ -19,7 +19,7 @@ public class PartyResponseDto {
         id = entity.getId();
         title = entity.getTitle();
         body = entity.getBody();
-        coordinate = "POINT (" + entity.getCoordinate().getX() + " " + entity.getCoordinate().getY() + ")"; // TODO: coordinate 에 예시 넣기
+        coordinate = "POINT (" + entity.getCoordinate().getY() + " " + entity.getCoordinate().getX() + ")";
         category = new CategoryResponseDto(entity.getCategory());
         targetUserCount = entity.getTargetUserCount();
     }

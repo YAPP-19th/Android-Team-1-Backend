@@ -145,7 +145,7 @@ class PartyServiceTest {
         // When: 파티 생성
         PartyResponseDto dto = partyService.create(
             me.getKakaoId(),
-            new PartyCreationRequestDto("my party", "body", "(1 1)", category.getId(), 5, LocalDateTime.now())
+            new PartyCreationRequestDto("my party", "body", "POINT (1 1)", category.getId(), 5, LocalDateTime.now())
         );
 
         // Then: 잘 생성된당
@@ -250,7 +250,7 @@ class PartyServiceTest {
         String title = "김치";
 
         // When: 파티 수정 요청을 보낸다
-        partyService.edit(me.getKakaoId(), party.getId(), new PartyEditRequestDto(title, "파티", "(2 2)"));
+        partyService.edit(me.getKakaoId(), party.getId(), new PartyEditRequestDto(title, "파티", "POINT (2 2)"));
 
         // Then: 파티 제목이 수정되었다!
         assertThat(partyRepository.getById(party.getId()).getTitle()).isEqualTo(title);
