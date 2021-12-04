@@ -21,9 +21,9 @@ public class KakaoRestHelper {
         JsonNode jsonNode = new ObjectMapper().readTree(stringResponseEntity.getBody());
         return new KakaoMyInfo(
             jsonNode.get("id").asText(),
-            jsonNode.get("kakao_account").get("email").asText(),
-            jsonNode.get("properties").get("profile_image").asText(),
-            jsonNode.get("properties").get("nickname").asText()
+            jsonNode.get("kakao_account") != null ? jsonNode.get("kakao_account").get("email").asText() : null,
+            jsonNode.get("properties") !=null ? jsonNode.get("properties").get("profile_image").asText() : null,
+            jsonNode.get("properties") !=null ? jsonNode.get("properties").get("nickname").asText() : null
         );
     }
 }
