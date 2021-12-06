@@ -44,6 +44,6 @@ public class AuthController {
 
         final String jwt = jwtUtil.generateToken(user.getKakaoId());
 
-        return new AuthenticationResponseDto(jwt);
+        return new AuthenticationResponseDto(jwt, user.getId());
     }
 }
