@@ -9,6 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static com.example.delibuddy.util.JsonNodeHelper.extractTextOrNull;
+
 
 public class KakaoRestHelper {
 
@@ -21,9 +26,9 @@ public class KakaoRestHelper {
         JsonNode jsonNode = new ObjectMapper().readTree(stringResponseEntity.getBody());
         return new KakaoMyInfo(
             jsonNode.get("id").asText(),
-            jsonNode.get("kakao_account").get("email").asText(),
-            jsonNode.get("properties").get("profile_image").asText(),
-            jsonNode.get("properties").get("nickname").asText()
+            extractTextOrNull(jsonNode, Arrays.asList("kakao_account", "email")),
+            extractTextOrNull(jsonNode, Arrays.asList("properties", "profile_image")),
+            extractTextOrNull(jsonNode, Arrays.asList("properties", "nickname"))
         );
     }
 }

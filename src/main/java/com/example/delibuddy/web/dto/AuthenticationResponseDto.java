@@ -6,8 +6,10 @@ import lombok.Getter;
 public class AuthenticationResponseDto {
 
     private final String jwt;
+    private final Long userId;
 
-    public AuthenticationResponseDto(String  jwt) {
+    public AuthenticationResponseDto(String jwt, Long userId) {
         this.jwt = jwt;
+        this.userId = userId;
     }
 }

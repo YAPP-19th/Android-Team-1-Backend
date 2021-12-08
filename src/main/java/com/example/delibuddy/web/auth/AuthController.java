@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 
 import static com.example.delibuddy.util.KakaoRestHelper.getKakaoMyInfo;
 
@@ -29,12 +30,12 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST) // PostMapping 으로 바꾸기
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequestDto authenticationRequestDto) throws Exception {
-        KakaoMyInfo kakaoMyinfo = null;
+    public AuthenticationResponseDto createAuthenticationToken(@RequestBody AuthenticationRequestDto authenticationRequestDto) throws Exception {
+        KakaoMyInfo kakaoMyinfo;
 
         try {
             kakaoMyinfo = getKakaoMyInfo(authenticationRequestDto.getToken());
-        } catch (JsonProcessingException e) {
+        } catch (JsonProcessingException | HttpClientErrorException e) {
             throw new Exception("Invalid kakao access token", e);
         }
 
@@ -43,6 +44,6 @@ public class AuthController {
 
         final String jwt = jwtUtil.generateToken(user.getKakaoId());
 
-        return ResponseEntity.ok(new AuthenticationResponseDto(jwt));
+        return new AuthenticationResponseDto(jwt, user.getId());
     }
 }
