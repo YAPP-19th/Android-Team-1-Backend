@@ -81,7 +81,7 @@ class PartyControllerTest {
     void createParty() {
         // Given: 타이틀, 카테고리
         String title = "title";
-        Category category = categoryRepository.save(new Category("hihi", "hi"));
+        Category category = categoryRepository.save(new Category("hihi", "hi", "google.com", "FFFFFF"));
 
 
         // When: 파티 생성!
@@ -204,7 +204,7 @@ class PartyControllerTest {
     @Test
     void getParty() {
         // Given: 선릉에 파티 둘
-        Category category = categoryRepository.save(new Category("hihi", "hi"));
+        Category category = categoryRepository.save(new Category("hihi", "hi", "google.com", "FFFFFF"));
         String 선릉_point = "POINT (127.048995 37.504506)";
         Party 선릉1 = partyFactory.createParty(
                 new PartyCreationRequestDto("test1", "test1", 선릉_point, category.getId(), 5, LocalDateTime.now()),
@@ -227,7 +227,7 @@ class PartyControllerTest {
     @Test
     void getPartiesInCircle() {
         // Given: 선릉에 파티 하나
-        Category category = categoryRepository.save(new Category("hihi", "hi"));
+        Category category = categoryRepository.save(new Category("hihi", "hi", "google.com", "FFFFFF"));
         String 선릉_point = "POINT (127.048995 37.504506)";
         Party 선릉 = partyRepository.save(
             partyFactory.createParty(
