@@ -6,5 +6,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class OkayDto {
-    private final boolean okay2 = true;
+    private final boolean okay = true;
 }
