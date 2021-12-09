@@ -23,3 +23,5 @@ jwt:
 
 api:
   v1: /api/v1
+
+GOOGLE_APPLICATION_CREDENTIALS: firebase-admin.json

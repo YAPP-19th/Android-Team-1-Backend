@@ -23,6 +23,16 @@ public class PartyController {
         return partyService.create(userDetails.getUsername(), requestDto);
     }
 
+    @GetMapping("${api.v1}/parties/{id}") // url parameter
+    public PartyResponseDto getParty(@RequestParam Long id) {
+        return partyService.getParty(id);
+    }
+
+    @GetMapping("${api.v1}/parties/circle")
+    public List<PartyResponseDto> getPartiesInCircle(@RequestParam String point, @RequestParam int distance) {
+        return partyService.getPartiesInCircle(point, distance);
+    }
+
     @PutMapping("${api.v1}/parties/{id}")
     public OkayDto editParty(@RequestBody PartyEditRequestDto requestDto, @PathVariable Long id) {
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -32,8 +42,35 @@ public class PartyController {
 
     @PutMapping("${api.v1}/parties/{id}/status")
     public OkayDto changeStatus(@RequestBody PartyChangeStatusRequestDto requestDto, @PathVariable Long id) {
-        // todo 구현하기. 파티는 OPEN -> ORDERING -> DONE 상태로 proceed 합니다.
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        partyService.changeStatus(userDetails.getUsername(), id, requestDto.getStatus());
+        return new OkayDto();
+    }
+
+    @PostMapping("${api.v1}/parties/{id}/join")
+    public OkayDto joinParty(@PathVariable Long id) {
+        // 이것도 okay 만 보내면 될 듯?
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        partyService.join(id, userDetails.getUsername());
+        return new OkayDto();
+    }
+
+    @PostMapping("${api.v1}/parties/{id}/leave")
+    public OkayDto leaveParty(@RequestParam Long id) {
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        partyService.leave(id, userDetails.getUsername());
+        return new OkayDto();
+    }
+
+    @PostMapping("${api.v1}/parties/{id}/ban")
+    public OkayDto banFromParty(@RequestParam Long id, @RequestBody PartyBanRequestDto partyBanRequestDto) {
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        partyService.ban(userDetails.getUsername(), id, partyBanRequestDto.getTargetId());
+        return new OkayDto();
+    }
+
+    @GetMapping("${api.v1}/parties/geom")
+    public OkayDto getPartiesInGeom() {
         return new OkayDto();
     }
 
@@ -42,42 +79,5 @@ public class PartyController {
         // 이것도 okay 만 보내면 될 듯?
         partyService.delete(id);
         return new OkayDto();
-    }
-
-    @PostMapping("${api.v1}/parties/{id}/join")
-    public PartyResponseDto joinParty(@PathVariable Long id) {
-        // 이것도 okay 만 보내면 될 듯?
-        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        partyService.join(id, userDetails.getUsername());
-        return new PartyResponseDto(1L, "", "");
-    }
-
-    @PostMapping("${api.v1}/parties/{id}/leave")
-    public PartyResponseDto leaveParty(@RequestParam Long id) {
-        // 이것도 okay 만 보내면 될 듯?
-        return new PartyResponseDto(1L, "", "");
-    }
-
-    @PostMapping("${api.v1}/parties/{id}/ban")
-    public PartyResponseDto banFromParty(@RequestParam Long id, @RequestBody PartyBanRequestDto partyBanRequestDto) {
-        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        partyService.ban(userDetails.getUsername(), id, partyBanRequestDto.getTargetId());
-        return new PartyResponseDto(1L, "", "");
-    }
-
-    @GetMapping("${api.v1}/parties/{id}") // url parameter
-    public PartyResponseDto getParty(@PathVariable Long id) {
-        return partyService.getParty(id);
-    }
-
-    @GetMapping("${api.v1}/parties/circle")
-    public List<PartyResponseDto> getPartiesInCircle(@RequestParam String point, @RequestParam int distance, @RequestParam String categories) {
-        // todo: category 의 리스트도 조건에 포함되도록, query dsl 로 구현해보자.
-        return partyService.getPartiesInCircle(point, distance);
-    }
-
-    @GetMapping("${api.v1}/parties/geom")
-    public <List> PartyResponseDto[] getPartiesInGeom() {
-        return new PartyResponseDto[] {new PartyResponseDto(1L, "", "")};
     }
 }
