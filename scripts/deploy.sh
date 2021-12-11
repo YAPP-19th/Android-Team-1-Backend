@@ -1,36 +1,15 @@
 #!/bin/bash
 
 REPOSITORY=/home/ubuntu/app
-PROJECT_NAME=Android-Team-1-Backend
 
 echo "> Build 파일 복사"
 
 cp $REPOSITORY/zip/build/libs/*.jar $REPOSITORY/
 
-echo "> 현재 구동중인 애플리케이션 pid 확인"
+echo "> 심볼릭 링크 연결(덮어쓰기)"
 
-CURRENT_PID=$(pgrep -f delibuddy)
+ln -sf $(ls -tr $REPOSITORY/*.jar | tail -n 1) delibuddy.jar
 
-echo "현재 구동중인 어플리케이션 pid: $CURRENT_PID"
+echo "> 서비스 재시작"
 
-if [ -z "$CURRENT_PID" ]; then
-    echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다."
-else
-    echo "> kill -15 $CURRENT_PID"
-    kill -15 $CURRENT_PID
-    sleep 5
-fi
-
-echo "> 새 어플리케이션 배포"
-
-JAR_NAME=$(ls -tr $REPOSITORY/*.jar | tail -n 1)
-
-echo "> JAR Name: $JAR_NAME"
-
-echo "> $JAR_NAME 에 실행권한 추가"
-
-chmod +x $JAR_NAME
-
-echo "> $JAR_NAME 실행"
-
-nohup java -Dserver.port=80 -jar $JAR_NAME --spring.config.location=/home/ubuntu/app/application.yml > $REPOSITORY/nohup.out 2>&1 &
+systemctl restart delibuddy.service
