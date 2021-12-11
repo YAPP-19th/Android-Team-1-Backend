@@ -107,7 +107,7 @@ class PartyServiceTest {
                         .build()
         );
 
-        Category category = categoryRepository.save(new Category("HiCategory", "Hi"));
+        Category category = categoryRepository.save(new Category("HiCategory", "Hi", "google.com", "FFFFFF"));
 
         // When: 파티 생성
         PartyResponseDto dto = partyService.create(
