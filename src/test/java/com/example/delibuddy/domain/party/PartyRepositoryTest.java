@@ -70,7 +70,7 @@ class PartyRepositoryTest {
 
         // Then: 선릉역과 마두역이 결과로 나온다.
         List<Long> ids = parties.stream().map(Party::getId).collect(Collectors.toList());
-        assertEquals(ids.size(), 2);
+        assertEquals(2, ids.size());
         assertTrue(ids.contains(선릉.getId()));
         assertTrue(ids.contains(역삼.getId()));
     }

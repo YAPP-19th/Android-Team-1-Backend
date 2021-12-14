@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class PartyCreationRequestDto {
     private String title;
     private String body;
+    private String placeName;
     private String coordinate;
     private Long categoryId;
     private Integer targetUserCount;
@@ -21,10 +22,4 @@ public class PartyCreationRequestDto {
     @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
     private LocalDateTime orderTime;
 
-    @Builder
-    public PartyCreationRequestDto(String title, String body, String coordinate) {
-        this.title = title;
-        this.body = body;
-        this.coordinate = coordinate;
-    }
 }

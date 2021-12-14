@@ -27,6 +27,7 @@ public class PartyFactory {
         return Party.builder()
             .title(dto.getTitle())
             .body(dto.getBody())
+            .placeName(dto.getPlaceName())
             .targetUserCount(dto.getTargetUserCount())
             .orderTime(dto.getOrderTime())
             .leader(leader)
