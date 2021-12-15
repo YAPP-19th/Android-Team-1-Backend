@@ -19,6 +19,9 @@ public class PartyResponseDto {
     private final long id;
     private final String title;
     private final String body;
+    private String placeName;
+    private String placeNameDetail;
+    private String openKakaoUrl;
     private final String coordinate;
     private final CategoryResponseDto category;
     private final Integer targetUserCount;
@@ -35,7 +38,7 @@ public class PartyResponseDto {
         id = entity.getId();
         title = entity.getTitle();
         body = entity.getBody();
-        coordinate = "POINT (" + entity.getCoordinate().getY() + " " + entity.getCoordinate().getX() + ")";
+        coordinate = "POINT (" + entity.getCoordinate().getX() + " " + entity.getCoordinate().getY() + ")";
         category = new CategoryResponseDto(entity.getCategory());
         currentUserCount = entity.getUsers().size();
         targetUserCount = entity.getTargetUserCount();

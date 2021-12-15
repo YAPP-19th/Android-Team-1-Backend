@@ -86,7 +86,7 @@ class PartyControllerTest {
 
         // When: 파티 생성!
         PartyResponseDto party = partyController.createParty(
-            new PartyCreationRequestDto(title, "body", "", "POINT (1 1)", category.getId(), 5, LocalDateTime.now())
+            new PartyCreationRequestDto(title, "body", "", "", "", "POINT (1 1)", category.getId(), 5, LocalDateTime.now())
         );
 
         // Then: 파티 생성 성공!
@@ -207,11 +207,11 @@ class PartyControllerTest {
         Category category = categoryRepository.save(new Category("hihi", "hi", "google.com", "FFFFFF"));
         String 선릉_point = "POINT (127.048995 37.504506)";
         Party 선릉1 = partyFactory.createParty(
-                new PartyCreationRequestDto("test1", "test1", "", 선릉_point, category.getId(), 5, LocalDateTime.now()),
+                new PartyCreationRequestDto("test1", "test1", "", "", "", 선릉_point, category.getId(), 5, LocalDateTime.now()),
                 this.user
         );
         Party 선릉2 = partyFactory.createParty(
-                new PartyCreationRequestDto("test2", "test2", "", 선릉_point, category.getId(), 5, LocalDateTime.now()),
+                new PartyCreationRequestDto("test2", "test2", "", "", "", 선릉_point, category.getId(), 5, LocalDateTime.now()),
                 this.user
         );
         partyRepository.save(선릉1);
@@ -231,7 +231,7 @@ class PartyControllerTest {
         String 선릉_point = "POINT (127.048995 37.504506)";
         Party 선릉 = partyRepository.save(
             partyFactory.createParty(
-                new PartyCreationRequestDto("test", "test", "", 선릉_point, category.getId(), 5, LocalDateTime.now()),
+                new PartyCreationRequestDto("test", "test", "", "", "", 선릉_point, category.getId(), 5, LocalDateTime.now()),
                 this.user
             )
         );
