@@ -23,6 +23,8 @@ public class PartyResponseDto {
     private final CategoryResponseDto category;
     private final Integer targetUserCount;
     private final Integer currentUserCount;
+    private final String status;
+
 
     @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
     private final LocalDateTime orderTime; // TODO: db 에는 9시간 전으로 들어감... timezone 문제가 있는 듯... mysql connection string 에서 serverTimeZone UTC+9 같은걸 해야 하나?
@@ -38,5 +40,6 @@ public class PartyResponseDto {
         currentUserCount = entity.getUsers().size();
         targetUserCount = entity.getTargetUserCount();
         orderTime = entity.getOrderTime();
+        status = entity.getStatus().getStatus();
     }
 }
