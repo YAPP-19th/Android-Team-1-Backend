@@ -10,14 +10,12 @@ import lombok.RequiredArgsConstructor;
 public class CategoryResponseDto {
     private final Long id;
     private final String name;
-    private final String code;
     private final String iconUrl;
     private final String backgroundColorCode;
 
     public CategoryResponseDto(Category category) {
         id = category.getId();
         name = category.getName();
-        code = category.getCode();
         iconUrl = category.getIconUrl();
         backgroundColorCode = category.getBackgroundColorCode();
     }

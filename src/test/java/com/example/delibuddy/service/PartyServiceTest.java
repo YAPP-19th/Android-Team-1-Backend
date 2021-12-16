@@ -112,7 +112,7 @@ class PartyServiceTest {
         // When: 파티 생성
         PartyResponseDto dto = partyService.create(
             me.getKakaoId(),
-            new PartyCreationRequestDto("my party", "body", "", "POINT (1 1)", category.getId(), 5, LocalDateTime.now())
+            new PartyCreationRequestDto("my party", "body", "", "", "", "POINT (1 1)", category.getId(), 5, LocalDateTime.now())
         );
 
         // Then: 잘 생성된당

@@ -15,6 +15,8 @@ public class PartyCreationRequestDto {
     private String title;
     private String body;
     private String placeName;
+    private String placeNameDetail;
+    private String openKakaoUrl;
     private String coordinate;
     private Long categoryId;
     private Integer targetUserCount;

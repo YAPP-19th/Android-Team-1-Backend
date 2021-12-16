@@ -55,19 +55,27 @@ public class Party extends BaseTimeEntity {
     private String placeName;
 
     @Column
+    private String placeNameDetail;
+
+    @Column
+    private String openKakaoUrl;
+
+    @Column
     private PartyStatus status;
 
     @Column
     private LocalDateTime orderTime;
 
     @Builder
-    public Party(User leader, Point coordinate, String title, String body, String placeName, LocalDateTime orderTime,
-    Integer targetUserCount, Category category) {
+    public Party(User leader, Point coordinate, String title, String body, String placeName, String placeNameDetail,
+    String openKakaoUrl, LocalDateTime orderTime, Integer targetUserCount, Category category) {
         this.leader = leader;
         this.coordinate = coordinate;
         this.title = title;
         this.body = body;
         this.placeName = placeName;
+        this.placeNameDetail = placeNameDetail;
+        this.openKakaoUrl = openKakaoUrl;
         this.orderTime = orderTime;
         this.status = PartyStatus.OPEN;
         this.targetUserCount = targetUserCount;
