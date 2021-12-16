@@ -38,6 +38,9 @@ public class PartyResponseDto {
         id = entity.getId();
         title = entity.getTitle();
         body = entity.getBody();
+        placeName = entity.getPlaceName();
+        placeNameDetail = entity.getPlaceNameDetail();
+        openKakaoUrl = entity.getOpenKakaoUrl();
         coordinate = "POINT (" + entity.getCoordinate().getX() + " " + entity.getCoordinate().getY() + ")";
         category = new CategoryResponseDto(entity.getCategory());
         currentUserCount = entity.getUsers().size();

@@ -206,8 +206,15 @@ class PartyControllerTest {
         // Given: 선릉에 파티 둘
         Category category = categoryRepository.save(new Category("hihi", "hi", "google.com", "FFFFFF"));
         String 선릉_point = "POINT (127.048995 37.504506)";
+
+        String title = "test1";
+        String body = "test1";
+        String placeName = "주소";
+        String placeNameDetail = "상세주소";
+        String openKakaoUrl = "https://open.kakao.com";
+
         Party 선릉1 = partyFactory.createParty(
-                new PartyCreationRequestDto("test1", "test1", "", "", "", 선릉_point, category.getId(), 5, LocalDateTime.now()),
+                new PartyCreationRequestDto(title, body, placeName, placeNameDetail, openKakaoUrl, 선릉_point, category.getId(), 5, LocalDateTime.now()),
                 this.user
         );
         Party 선릉2 = partyFactory.createParty(
@@ -222,6 +229,11 @@ class PartyControllerTest {
 
         // Then: 조회 성공
         assertThat(party.getId()).isEqualTo(선릉1.getId());
+        assertThat(party.getTitle()).isEqualTo(title);
+        assertThat(party.getBody()).isEqualTo(body);
+        assertThat(party.getPlaceName()).isEqualTo(placeName);
+        assertThat(party.getPlaceNameDetail()).isEqualTo(placeNameDetail);
+        assertThat(party.getOpenKakaoUrl()).isEqualTo(openKakaoUrl);
     }
 
     @Test
