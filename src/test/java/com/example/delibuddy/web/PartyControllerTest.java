@@ -91,6 +91,7 @@ class PartyControllerTest {
 
         // Then: 파티 생성 성공!
         assertThat(party.getTitle()).isEqualTo("title");
+        assertThat(party.getLeader().getId()).isEqualTo(user.getId());
     }
 
     @Test
