@@ -8,7 +8,12 @@ import java.util.List;
 
 public interface PartyRepository extends JpaRepository<Party, Long> {
 
-    @Query(value = "SELECT party.* FROM party WHERE ST_Distance_Sphere(coordinate, ST_GeomFromText(:wkt)) <= :meter ;", nativeQuery = true)
+    @Query(
+        value = "SELECT party.* FROM party " +
+                "WHERE ST_Distance_Sphere(coordinate, ST_GeomFromText(:wkt)) <= :meter " +
+                "ORDER BY FIELD(status, 'OPEN', 'ORDERING', 'DONE'), id DESC;",
+        nativeQuery = true
+    )
     List<Party> findPartiesNear(@Param("wkt") String wkt, @Param("meter") int meter);
 
     @Query(value = "SELECT party.* FROM party WHERE MBRContains(ST_GeomFromText(:wkt), coordinate)", nativeQuery = true)

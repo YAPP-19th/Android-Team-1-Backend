@@ -60,7 +60,7 @@ public class Party extends BaseTimeEntity {
     @Column
     private String openKakaoUrl;
 
-    @Column
+    @Enumerated(EnumType.STRING)
     private PartyStatus status;
 
     @Column

@@ -3,7 +3,6 @@ package com.example.delibuddy.domain.party;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +18,10 @@ class PartyRepositoryTest {
 
     @Autowired
     PartyRepository partyRepository;
+
+    @Autowired
+    PartyFactory partyFactory;
+
 
     @Test
     public void 파티_등록() {
@@ -43,6 +46,24 @@ class PartyRepositoryTest {
         List<Party> parties = partyRepository.findPartiesNear("POINT (1 1)", 2000);
         assertEquals(parties.size(), 1);
         assertEquals(parties.get(0).getId(), party1.getId());
+    }
+
+    @Test
+    public void findPartiesNear_정렬_테스트_OPEN_ORDERING_DONE_순으로_정렬되어야_한다() {
+        Party party1 = createPartyWithPointString(partyRepository, "POINT (1 1)");
+        party1.setStatus(PartyStatus.DONE);
+        Party party2 = createPartyWithPointString(partyRepository, "POINT (1 1)");
+        party2.setStatus(PartyStatus.DONE);
+        Party party3 = createPartyWithPointString(partyRepository, "POINT (1 1)");
+        party3.setStatus(PartyStatus.OPEN);
+        Party party4 = createPartyWithPointString(partyRepository, "POINT (1 1)");
+        party4.setStatus(PartyStatus.ORDERING);
+
+        List<Party> parties = partyRepository.findPartiesNear("POINT (1 1)", 2000);
+        assertEquals(party3.getId(), parties.get(0).getId());
+        assertEquals(party4.getId(), parties.get(1).getId());
+        assertEquals(party2.getId(), parties.get(2).getId());
+        assertEquals(party1.getId(), parties.get(3).getId());
     }
 
     @Test
