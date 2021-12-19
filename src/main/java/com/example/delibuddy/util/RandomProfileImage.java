@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
-@Service
 public class RandomProfileImage {
 
     @Value("${s3.random_profile_image_url}")
