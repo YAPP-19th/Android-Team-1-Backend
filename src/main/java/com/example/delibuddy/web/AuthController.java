@@ -1,10 +1,11 @@
-package com.example.delibuddy.web.auth;
+package com.example.delibuddy.web;
 
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
 import com.example.delibuddy.service.MyUserDetailsService;
 import com.example.delibuddy.util.JwtUtil;
 import com.example.delibuddy.util.KakaoMyInfo;
+import com.example.delibuddy.web.auth.MyUserDetails;
 import com.example.delibuddy.web.dto.AuthenticationRequestDto;
 import com.example.delibuddy.web.dto.AuthenticationResponseDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
