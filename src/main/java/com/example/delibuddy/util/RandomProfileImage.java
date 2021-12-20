@@ -1,10 +1,11 @@
 package com.example.delibuddy.util;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
+@Component
 public class RandomProfileImage {
 
     @Value("${s3.random_profile_image_url}")

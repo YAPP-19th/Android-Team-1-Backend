@@ -30,7 +30,8 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    private RandomProfileImage randomProfileImage;
+    @Autowired
+    private RandomProfileImage randomProfileImage = new RandomProfileImage();
 
     @RequestMapping(value = "${api.v1}/auth", method = RequestMethod.POST)
     public AuthenticationResponseDto createAuthenticationToken(@RequestBody AuthenticationRequestDto authenticationRequestDto) throws Exception {
