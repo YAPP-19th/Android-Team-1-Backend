@@ -24,4 +24,7 @@ jwt:
 api:
   v1: /api/v1
 
+s3:
+  random_profile_image_url: "https://"
+
 GOOGLE_APPLICATION_CREDENTIALS: firebase-admin.json
