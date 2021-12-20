@@ -27,7 +27,6 @@ public class KakaoRestHelper {
         return new KakaoMyInfo(
             jsonNode.get("id").asText(),
             extractTextOrNull(jsonNode, Arrays.asList("kakao_account", "email")),
-            extractTextOrNull(jsonNode, Arrays.asList("properties", "profile_image")),
             extractTextOrNull(jsonNode, Arrays.asList("properties", "nickname"))
         );
     }
