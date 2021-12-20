@@ -1,16 +1,18 @@
-package com.example.delibuddy.web.auth;
+package com.example.delibuddy.web;
 
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
 import com.example.delibuddy.service.MyUserDetailsService;
 import com.example.delibuddy.util.JwtUtil;
 import com.example.delibuddy.util.KakaoMyInfo;
+import com.example.delibuddy.web.auth.MyUserDetails;
 import com.example.delibuddy.web.dto.AuthenticationRequestDto;
 import com.example.delibuddy.web.dto.AuthenticationResponseDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,7 +31,7 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST) // PostMapping 으로 바꾸기
+    @RequestMapping(value = "${api.v1}/auth", method = RequestMethod.POST)
     public AuthenticationResponseDto createAuthenticationToken(@RequestBody AuthenticationRequestDto authenticationRequestDto) throws Exception {
         KakaoMyInfo kakaoMyinfo;
 
@@ -44,6 +46,14 @@ public class AuthController {
 
         final String jwt = jwtUtil.generateToken(user.getKakaoId());
 
+        return new AuthenticationResponseDto(jwt, user.getId());
+    }
+
+    @RequestMapping(value = "${api.v1}/auth/refresh", method = RequestMethod.POST)
+    public AuthenticationResponseDto refreshAuthenticationToken() {
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByKakaoId(userDetails.getUsername()).get();
+        final String jwt = jwtUtil.generateToken(user.getKakaoId());
         return new AuthenticationResponseDto(jwt, user.getId());
     }
 }
