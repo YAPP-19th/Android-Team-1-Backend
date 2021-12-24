@@ -13,9 +13,15 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public UserResponseDto getMyInfo(String myKakaoId) {
         User user = userRepository.findByKakaoId(myKakaoId).get();
         return new UserResponseDto(user);
+    }
+
+    @Transactional
+    public void setFcmToken(String myKakaoId, String fcmToken) {
+        User user = userRepository.findByKakaoId(myKakaoId).get();
+        user.setFcmToken(fcmToken);
     }
 }

@@ -31,6 +31,9 @@ public class User extends BaseTimeEntity {
     @Column(length = 255)
     private String profileImage;
 
+    @Column(length = 255, nullable = true)
+    private String fcmToken;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<PartyUser> parties = new ArrayList<>();
 
@@ -42,4 +45,7 @@ public class User extends BaseTimeEntity {
         this.profileImage = profileImage;
     }
 
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
 }
