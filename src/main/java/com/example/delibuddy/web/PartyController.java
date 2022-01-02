@@ -24,7 +24,7 @@ public class PartyController {
     }
 
     @GetMapping("${api.v1}/parties/{id}") // url parameter
-    public PartyResponseDto getParty(@RequestParam Long id) {
+    public PartyResponseDto getParty(@PathVariable Long id) {
         return partyService.getParty(id);
     }
 
