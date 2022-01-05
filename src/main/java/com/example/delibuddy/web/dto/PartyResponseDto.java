@@ -28,6 +28,9 @@ public class PartyResponseDto {
     private final Integer targetUserCount;
     private final Integer currentUserCount;
     private final String status;
+    private final List<UserResponseDto> users;
+    private final Boolean isIn;
+
 
 
     @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
@@ -35,7 +38,7 @@ public class PartyResponseDto {
 
     private final List<String> allStatuses = Arrays.stream(PartyStatus.values()).map(PartyStatus::getStatus).collect(Collectors.toList());
 
-    public PartyResponseDto(Party entity) {
+    public PartyResponseDto(Party entity, Boolean isIn) {
         id = entity.getId();
         title = entity.getTitle();
         body = entity.getBody();
@@ -49,5 +52,7 @@ public class PartyResponseDto {
         targetUserCount = entity.getTargetUserCount();
         orderTime = entity.getOrderTime();
         status = entity.getStatus().getStatus();
+        users = entity.getUsers().stream().map(partyUSer->new UserResponseDto(partyUSer.getUser())).collect(Collectors.toList());
+        this.isIn = isIn;
     }
 }

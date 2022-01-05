@@ -33,20 +33,21 @@ public class PartyService {
         Party party = partyFactory.createParty(dto, leader);
         partyRepository.save(party);
         party.join(partyUserRepository.save(PartyUser.builder().user(leader).party(party).build()));
-        return new PartyResponseDto(party);
+        return new PartyResponseDto(party, Boolean.TRUE); // 자신이 생성한 파티에는 항상 속해있기 때문에 TRUE
     }
 
     @Transactional(readOnly = true)
-    public PartyResponseDto getParty(Long id) {
-        return new PartyResponseDto(
-            partyRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 파티가 없습니다. id=" + id))
-        );
+    public PartyResponseDto getParty(Long id, String userKakaoId) {
+        User user = userRepository.findByKakaoId(userKakaoId).get();
+        Party party = partyRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 파티가 없습니다. id=" + id));
+        return new PartyResponseDto(party, party.isIn(user));
     }
 
     @Transactional(readOnly = true)
-    public List<PartyResponseDto> getPartiesInCircle(String point, int distance) {
+    public List<PartyResponseDto> getPartiesInCircle(String point, int distance, String userKakaoId) {
+        User user = userRepository.findByKakaoId(userKakaoId).get();
         return partyRepository.findPartiesNear(point, distance).stream()
-                .map(PartyResponseDto::new)
+                .map(party->new PartyResponseDto(party, party.isIn(user)))
                 .collect(Collectors.toList());
     }
 
@@ -146,11 +147,11 @@ public class PartyService {
         partyRepository.delete(party);
     }
 
-    @Transactional(readOnly = true)
-    public List<PartyResponseDto> getPartiesInGeom(String wkt) {
-        // 초기 기획에서 제외되었습니다~
-        return partyRepository.findPartiesInGeom(wkt).stream()
-                .map(PartyResponseDto::new)
-                .collect(Collectors.toList());
-    }
+//    @Transactional(readOnly = true)
+//    public List<PartyResponseDto> getPartiesInGeom(String wkt) {
+//         초기 기획에서 제외되었습니다~
+//        return partyRepository.findPartiesInGeom(wkt).stream()
+//                .map(PartyResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
 }
