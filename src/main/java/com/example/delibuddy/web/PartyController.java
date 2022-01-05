@@ -25,12 +25,20 @@ public class PartyController {
 
     @GetMapping("${api.v1}/parties/{id}") // url parameter
     public PartyResponseDto getParty(@PathVariable Long id) {
-        return partyService.getParty(id);
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return partyService.getParty(id, userDetails.getUsername());
     }
 
     @GetMapping("${api.v1}/parties/circle")
     public List<PartyResponseDto> getPartiesInCircle(@RequestParam String point, @RequestParam int distance) {
-        return partyService.getPartiesInCircle(point, distance);
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return partyService.getPartiesInCircle(point, distance, userDetails.getUsername());
+    }
+
+    @GetMapping("${api.v1}/parties/me")
+    public List<PartyResponseDto> getMyParties() {
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return partyService.getMyParties(userDetails.getUsername());
     }
 
     @PutMapping("${api.v1}/parties/{id}")
