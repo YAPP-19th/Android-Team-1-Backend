@@ -56,14 +56,14 @@ public class PartyController {
     }
 
     @PostMapping("${api.v1}/parties/{id}/leave")
-    public OkayDto leaveParty(@RequestParam Long id) {
+    public OkayDto leaveParty(@PathVariable Long id) {
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         partyService.leave(id, userDetails.getUsername());
         return new OkayDto();
     }
 
     @PostMapping("${api.v1}/parties/{id}/ban")
-    public OkayDto banFromParty(@RequestParam Long id, @RequestBody PartyBanRequestDto partyBanRequestDto) {
+    public OkayDto banFromParty(@PathVariable Long id, @RequestBody PartyBanRequestDto partyBanRequestDto) {
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         partyService.ban(userDetails.getUsername(), id, partyBanRequestDto.getTargetId());
         return new OkayDto();
@@ -75,7 +75,7 @@ public class PartyController {
     }
 
     @DeleteMapping("${api.v1}/parties/{id}")
-    public OkayDto deleteParty(@RequestParam Long id) {
+    public OkayDto deleteParty(@PathVariable Long id) {
         // 이것도 okay 만 보내면 될 듯?
         partyService.delete(id);
         return new OkayDto();
