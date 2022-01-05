@@ -44,7 +44,7 @@ jobs:
 
       # make file firebase-admin.json
       - name: make firebase admin file
-        run: echo ${{ secrets.FIREBASE_ADMIN }} >> ./src/main/resources/firebase-admin.json
+        run: echo "${{ secrets.FIREBASE_ADMIN }}" >> ./src/main/resources/firebase-admin.json
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
