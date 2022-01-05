@@ -14,54 +14,26 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 public class FcmService {
-    private Logger logger = LoggerFactory.getLogger(FcmService.class);
+    private static Logger logger = LoggerFactory.getLogger(FcmService.class);
 
-    public void sendMessageToToken(FcmRequest request){
-        Message message = getPreconfiguredMessageToToken(request);
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String jsonOutput = gson.toJson(message);
-        String response = sendAndGetResponse(message);
-        logger.info("Sent message to token. Device token: " + request.getToken() + ", " + response+ " msg "+jsonOutput);
-    }
+    public static void sendToToken(FcmRequest fcmRequest, String token) {
 
-    private String sendAndGetResponse(Message message) {
-        try {
-            return FirebaseMessaging.getInstance().sendAsync(message).get();
-        } catch (ExecutionException|InterruptedException e) {
-            logger.error(e.getMessage());
-            return e.toString();
-        }
-    }
-
-    private AndroidConfig getAndroidConfig(String topic) {
-        return AndroidConfig.builder()
-                .setTtl(Duration.ofMinutes(2).toMillis()).setCollapseKey(topic)
-                .setPriority(AndroidConfig.Priority.HIGH)
-                .setNotification(AndroidNotification.builder()
-                        .setTag(topic).build()).build();
-    }
-    private ApnsConfig getApnsConfig(String topic) {
-        return ApnsConfig.builder().setAps(Aps.builder().setCategory(topic).setThreadId(topic).build()).build();
-    }
-    private Message getPreconfiguredMessageToToken(FcmRequest request) {
-        return getPreconfiguredMessageBuilder(request).setToken(request.getToken()).build();
-    }
-    private Message getPreconfiguredMessageWithoutData(FcmRequest request) {
-        return getPreconfiguredMessageBuilder(request).setTopic(request.getTopic())
-                .build();
-    }
-    private Message getPreconfiguredMessageWithData(Map<String, String> data, FcmRequest request) {
-        return getPreconfiguredMessageBuilder(request).putAllData(data).setToken(request.getToken())
-                .build();
-    }
-    private Message.Builder getPreconfiguredMessageBuilder(FcmRequest request) {
-        AndroidConfig androidConfig = getAndroidConfig(request.getTopic());
-        ApnsConfig apnsConfig = getApnsConfig(request.getTopic());
-        return Message.builder()
-            .setApnsConfig(apnsConfig)
-            .setAndroidConfig(androidConfig)
+        // See documentation on defining a message payload.
+        Message message = Message.builder()
             .setNotification(
-                Notification.builder().setTitle(request.getTitle()).setBody(request.getMessage()).build()
-            );
+                Notification.builder().setTitle(fcmRequest.getTitle()).setBody(fcmRequest.getBody()).build()
+            )
+            .putData("route", fcmRequest.getRoute())
+            .setToken(token)
+            .build();
+
+        // Send a message to the device corresponding to the provided
+        // registration token.
+        try {
+            FirebaseMessaging.getInstance().send(message);
+        } catch (FirebaseMessagingException e) {
+            logger.error(e.toString());
+        }
+
     }
 }

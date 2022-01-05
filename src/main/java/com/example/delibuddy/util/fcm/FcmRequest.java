@@ -7,7 +7,6 @@ import lombok.Data;
 @Builder
 public class FcmRequest {
     private final String title;
-    private final String message;
-    private final String topic;
-    private final String token;
+    private final String body;
+    private final String route;
 }

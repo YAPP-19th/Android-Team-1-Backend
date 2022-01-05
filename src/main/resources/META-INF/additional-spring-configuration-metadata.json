@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "GOOGLE_APPLICATION_CREDENTIALS",
+      "type": "java.lang.String",
+      "description": "Description for GOOGLE_APPLICATION_CREDENTIALS."
+  }
+] }
