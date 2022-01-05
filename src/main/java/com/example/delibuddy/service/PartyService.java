@@ -51,10 +51,10 @@ public class PartyService {
     }
 
     @Transactional(readOnly = true)
-    public List<PartyResponseDto> getMyParties(String point, int distance) {
-        // TODO: 구현하기
-        return partyRepository.findPartiesNear(point, distance).stream()
-                .map(PartyResponseDto::new)
+    public List<PartyResponseDto> getMyParties(String userKakaoId) {
+        User user = userRepository.findByKakaoId(userKakaoId).get();
+        return user.getParties().stream()
+                .map(partyUser->new PartyResponseDto(partyUser.getParty(), Boolean.TRUE)) // 자신이 속한 파티를 호출하므로, 항상 TRUE
                 .collect(Collectors.toList());
     }
 

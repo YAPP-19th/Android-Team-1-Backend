@@ -33,6 +33,12 @@ public class PartyController {
         return partyService.getPartiesInCircle(point, distance);
     }
 
+    @GetMapping("${api.v1}/parties/me")
+    public List<PartyResponseDto> getMyParties() {
+        MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return partyService.getMyParties(userDetails.getUsername());
+    }
+
     @PutMapping("${api.v1}/parties/{id}")
     public OkayDto editParty(@RequestBody PartyEditRequestDto requestDto, @PathVariable Long id) {
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
