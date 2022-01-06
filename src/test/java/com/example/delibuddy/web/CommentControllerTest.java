@@ -66,7 +66,6 @@ public class CommentControllerTest {
 
     private MockMvc mvc;
 
-
     @BeforeEach
     void setUp() {
         user = userRepository.save(
@@ -86,6 +85,7 @@ public class CommentControllerTest {
                 .apply(springSecurity())
                 .build();
     }
+
     @Test
     public void 댓글이_등록된다() throws Exception {
         //given : 파티와 유저와 댓글 달 내용
