@@ -7,6 +7,7 @@ import com.example.delibuddy.domain.party.*;
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
 import com.example.delibuddy.service.MyUserDetailsService;
+import com.example.delibuddy.service.PartyService;
 import com.example.delibuddy.web.dto.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
 import static com.example.delibuddy.testhelper.PartyTestHelper.createPartyWithPointString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest
@@ -56,6 +58,9 @@ class PartyControllerTest {
     private PartyRepository partyRepository;
 
     @Autowired
+    private PartyService partyService;
+
+    @Autowired
     private PartyUserRepository partyUserRepository;
 
     @Autowired
@@ -76,6 +81,8 @@ class PartyControllerTest {
     private User user;
 
     private MockMvc mvc;
+
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @BeforeEach
     void setUp() {
@@ -102,7 +109,6 @@ class PartyControllerTest {
         // Given: 타이틀, 카테고리
         String title = "title";
         Category category = categoryRepository.save(new Category("hihi", "hi", "google.com", "FFFFFF"));
-        ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
         // When: 파티 생성!
         MvcResult result = mvc.perform(
@@ -160,12 +166,31 @@ class PartyControllerTest {
     }
 
     @Test
-    void deleteParty() {
+    void deleteParty() throws Exception {
         // Given: 파티 하나 주어짐
+        Category category = categoryRepository.save(new Category("hihi", "hi", "google.com", "FFFFFF"));
+        partyService.create(
+                user.getKakaoId(),
+                new PartyCreationRequestDto(
+                        "title",
+                        "body",
+                        "",
+                        "",
+                        "",
+                        "POINT (1 1)",
+                        category.getId(),
+                        5,
+                        LocalDateTime.now()
+                )
+        );
         Party party = partyRepository.save(Party.builder().leader(user).build());
 
         // When: 파티 삭제!
-        partyController.deleteParty(party.getId());
+        MvcResult result = mvc.perform(
+                delete(
+                        "http://localhost:8080/api/v1/parties/" + party.getId().toString()
+                ).contentType(MediaType.APPLICATION_JSON)
+        ).andReturn();
 
         // Then: 데이터베이스에서 삭제됩니다.
         // 컨트롤러 레밸의 테스트에서 repository 를 써서 데이터베이스를 확인하는게 과연 맞나?

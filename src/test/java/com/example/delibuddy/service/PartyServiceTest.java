@@ -228,4 +228,6 @@ class PartyServiceTest {
         assertThrows(IllegalArgumentException.class, () -> partyService.join(party.getId(), you.getKakaoId()));
     }
 
+    // TODO: 강퇴 내역이 있어도, 멤버가 남아 있어도, 댓글이 있어도 파티 삭제가 되는지 검증 필요
+
 }
