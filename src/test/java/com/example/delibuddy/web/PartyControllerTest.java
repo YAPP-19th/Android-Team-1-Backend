@@ -8,14 +8,22 @@ import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
 import com.example.delibuddy.service.MyUserDetailsService;
 import com.example.delibuddy.web.dto.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,6 +32,8 @@ import java.util.stream.Collectors;
 
 import static com.example.delibuddy.testhelper.PartyTestHelper.createPartyWithPointString;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest
 @Transactional
@@ -60,7 +70,12 @@ class PartyControllerTest {
     @Autowired
     private PartyFactory partyFactory;
 
+    @Autowired
+    private WebApplicationContext context;
+
     private User user;
+
+    private MockMvc mvc;
 
     @BeforeEach
     void setUp() {
@@ -75,21 +90,44 @@ class PartyControllerTest {
         SecurityContextHolder.getContext().setAuthentication(
             new UsernamePasswordAuthenticationToken(userDetails, "", new ArrayList<>())
         );
+
+        mvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
     }
 
     @Test
-    void createParty() {
+    void createParty() throws Exception {
         // Given: 타이틀, 카테고리
         String title = "title";
         Category category = categoryRepository.save(new Category("hihi", "hi", "google.com", "FFFFFF"));
-
+        ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
         // When: 파티 생성!
-        PartyResponseDto party = partyController.createParty(
-            new PartyCreationRequestDto(title, "body", "", "", "", "POINT (1 1)", category.getId(), 5, LocalDateTime.now())
-        );
+        MvcResult result = mvc.perform(
+                post("http://localhost:8080/api/v1/parties")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                objectMapper.writeValueAsString(
+                                        new PartyCreationRequestDto(
+                                                title,
+                                                "body",
+                                                "",
+                                                "",
+                                                "",
+                                                "POINT (1 1)",
+                                                category.getId(),
+                                                5,
+                                                LocalDateTime.now()
+                                        )
+                                )
+                        )
+        ).andReturn();
 
         // Then: 파티 생성 성공!
+        JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
+        Party party = partyRepository.getById(jsonNode.get("id").asLong());
         assertThat(party.getTitle()).isEqualTo("title");
         assertThat(party.getLeader().getId()).isEqualTo(user.getId());
     }
