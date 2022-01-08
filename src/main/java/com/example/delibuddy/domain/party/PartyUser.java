@@ -5,6 +5,8 @@ import com.example.delibuddy.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -32,6 +34,7 @@ public class PartyUser extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "party_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)  // https://stackoverflow.com/questions/14875793/jpa-hibernate-how-to-define-a-constraint-having-on-delete-cascade
     private Party party;
 
     @Builder

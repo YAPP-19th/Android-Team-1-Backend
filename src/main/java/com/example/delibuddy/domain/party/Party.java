@@ -31,8 +31,7 @@ public class Party extends BaseTimeEntity {
     @JoinColumn(name = "leader_id")
     private User leader;
 
-    @OnDelete(action = OnDeleteAction.CASCADE)  // https://stackoverflow.com/questions/14875793/jpa-hibernate-how-to-define-a-constraint-having-on-delete-cascade
-    @OneToMany(mappedBy = "party", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "party", fetch = FetchType.LAZY)
     private List<PartyUser> users = new ArrayList<>();
 
     @Column

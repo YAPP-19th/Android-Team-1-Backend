@@ -169,7 +169,7 @@ class PartyControllerTest {
     void deleteParty() throws Exception {
         // Given: 파티 하나 주어짐
         Category category = categoryRepository.save(new Category("hihi", "hi", "google.com", "FFFFFF"));
-        partyService.create(
+        PartyResponseDto partyResponseDto = partyService.create(
                 user.getKakaoId(),
                 new PartyCreationRequestDto(
                         "title",
@@ -183,19 +183,17 @@ class PartyControllerTest {
                         LocalDateTime.now()
                 )
         );
-        Party party = partyRepository.save(Party.builder().leader(user).build());
+        assertThat(partyRepository.findById(partyResponseDto.getId()).isPresent()).isTrue();
 
         // When: 파티 삭제!
         MvcResult result = mvc.perform(
                 delete(
-                        "http://localhost:8080/api/v1/parties/" + party.getId().toString()
+                        "http://localhost:8080/api/v1/parties/" + partyResponseDto.getId()
                 ).contentType(MediaType.APPLICATION_JSON)
         ).andReturn();
 
         // Then: 데이터베이스에서 삭제됩니다.
-        // 컨트롤러 레밸의 테스트에서 repository 를 써서 데이터베이스를 확인하는게 과연 맞나?
-        // 음.. 안될 게 뭐람?
-        assertThat(partyRepository.findById(party.getId()).isPresent()).isFalse();
+        assertThat(partyRepository.findById(partyResponseDto.getId()).isPresent()).isFalse();
     }
 
     @Test

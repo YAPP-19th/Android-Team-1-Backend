@@ -30,7 +30,7 @@ public class Ban extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "party_id")
     private Party party;
 
