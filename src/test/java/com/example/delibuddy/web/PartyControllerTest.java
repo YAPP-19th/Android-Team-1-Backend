@@ -167,6 +167,9 @@ class PartyControllerTest {
 
     @Test
     void deleteParty() throws Exception {
+        // TODO: 물리키에 의한 CASCADE 가 없어도 테스트가 실패하는 문제가 있음... 진상 조사하기
+        // TODO: 막상 API 요청하면 CASCADE 가 안 되서 삭제가 실패하지만 테스트는 통과합니다.
+
         // Given: 파티 하나 주어짐
         Category category = categoryRepository.save(new Category("hihi", "hi", "google.com", "FFFFFF"));
         PartyResponseDto partyResponseDto = partyService.create(
