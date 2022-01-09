@@ -1,20 +1,14 @@
 package com.example.delibuddy.util.fcm;
 
 import com.google.firebase.messaging.*;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-
 
 @Service
-public class FcmService {
-    private static Logger logger = LoggerFactory.getLogger(FcmService.class);
+public class FcmUtil {
+    private static Logger logger = LoggerFactory.getLogger(FcmUtil.class);
 
     public static void sendToToken(FcmRequest fcmRequest, String token) {
 

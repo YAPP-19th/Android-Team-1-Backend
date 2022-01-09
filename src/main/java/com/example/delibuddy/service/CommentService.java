@@ -6,8 +6,6 @@ import com.example.delibuddy.domain.party.Party;
 import com.example.delibuddy.domain.party.PartyRepository;
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
-import com.example.delibuddy.util.fcm.FcmRequest;
-import com.example.delibuddy.util.fcm.FcmService;
 import com.example.delibuddy.web.dto.CommentCreationRequestDto;
 import com.example.delibuddy.web.dto.CommentResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -50,19 +48,6 @@ public class CommentService {
 
         // Party party = partyRepository.getById(dto.getPartyId());
         // party.getComments().add(comment);
-
-
-        // TODO: test 할 떄 mocking 해서 FcmService.sendToToken 호출되었는지 검증하기
-        if (party.getLeader().getFcmToken() != null && !party.getLeader().getFcmToken().isEmpty()) {
-            FcmService.sendToToken(
-                FcmRequest.builder()
-                    .title("새로운 댓글이 달렸습니다.")
-                    .body("딜리버디와 함께 새로운 댓글을 확인해 보아요 \uD83C\uDFB5~")
-                    .route("delibuddy://comment?partyId=" + party.getId().toString() + "&commentId=" + comment.getId().toString())
-                    .build(),
-                party.getLeader().getFcmToken()
-            );
-        }
 
         return new CommentResponseDto(comment);
     }
