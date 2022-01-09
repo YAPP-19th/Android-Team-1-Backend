@@ -1,5 +1,7 @@
 package com.example.delibuddy.web;
 
+import com.example.delibuddy.domain.party.PartyStatus;
+import com.example.delibuddy.service.FcmService;
 import com.example.delibuddy.service.PartyService;
 import com.example.delibuddy.web.auth.MyUserDetails;
 import com.example.delibuddy.web.dto.*;
@@ -16,6 +18,7 @@ import java.util.List;
 public class PartyController {
 
     private final PartyService partyService;
+    private final FcmService fcmService;
 
     @PostMapping("${api.v1}/parties")
     public PartyResponseDto createParty(@RequestBody PartyCreationRequestDto requestDto) {
@@ -37,6 +40,7 @@ public class PartyController {
     public OkayDto editParty(@RequestBody PartyEditRequestDto requestDto, @PathVariable Long id) {
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         partyService.edit(userDetails.getUsername(), id, requestDto);
+        fcmService.partyEdit(id);
         return new OkayDto();
     }
 
@@ -44,6 +48,7 @@ public class PartyController {
     public OkayDto changeStatus(@RequestBody PartyChangeStatusRequestDto requestDto, @PathVariable Long id) {
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         partyService.changeStatus(userDetails.getUsername(), id, requestDto.getStatus());
+        fcmService.partyStatusChanged(id, requestDto.getStatus());
         return new OkayDto();
     }
 
@@ -52,6 +57,7 @@ public class PartyController {
         // 이것도 okay 만 보내면 될 듯?
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         partyService.join(id, userDetails.getUsername());
+        fcmService.partyJoin(id, userDetails.getUsername());
         return new OkayDto();
     }
 
