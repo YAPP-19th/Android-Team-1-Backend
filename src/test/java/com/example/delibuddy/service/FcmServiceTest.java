@@ -4,13 +4,17 @@ import com.example.delibuddy.domain.category.Category;
 import com.example.delibuddy.domain.category.CategoryRepository;
 import com.example.delibuddy.domain.notification.Notification;
 import com.example.delibuddy.domain.notification.NotificationRepository;
+import com.example.delibuddy.domain.party.PartyRepository;
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
+import com.example.delibuddy.testhelper.FcmUtilMock;
 import com.example.delibuddy.web.dto.CommentCreationRequestDto;
 import com.example.delibuddy.web.dto.CommentResponseDto;
 import com.example.delibuddy.web.dto.PartyCreationRequestDto;
 import com.example.delibuddy.web.dto.PartyResponseDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -25,7 +29,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 class FcmServiceTest {
 
-    @Autowired
     FcmService fcmService;
 
     @Autowired
@@ -35,6 +38,9 @@ class FcmServiceTest {
     private PartyService partyService;
 
     @Autowired
+    private PartyRepository partyRepository;
+
+    @Autowired
     private CategoryRepository categoryRepository;
 
     @Autowired
@@ -42,6 +48,11 @@ class FcmServiceTest {
 
     @Autowired
     private NotificationRepository notificationRepository;
+
+    @BeforeEach
+    public void setUp() {
+        fcmService = new FcmService(partyRepository, notificationRepository, userRepository, new FcmUtilMock());
+    }
 
     @Test
     void party_에_새_댓글이_달리면_알림이_간다() {

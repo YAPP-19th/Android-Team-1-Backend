@@ -8,10 +8,9 @@ import com.example.delibuddy.domain.party.PartyUser;
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
 import com.example.delibuddy.util.fcm.FcmRequest;
+import com.example.delibuddy.util.fcm.FcmUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import static com.example.delibuddy.util.fcm.FcmUtil.sendToToken;
 
 
 @RequiredArgsConstructor
@@ -23,6 +22,7 @@ public class FcmService {
     private final PartyRepository partyRepository;
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
+    private final FcmUtil fcmUtil;
 
     public void partyEdit(Long partyId) {
         Party party = partyRepository.getById(partyId);
@@ -39,7 +39,7 @@ public class FcmService {
 
         for (PartyUser partyUser: party.getUsers()) {
             if (partyUser.getUser().getFcmToken() != null && !partyUser.getUser().getFcmToken().isEmpty()) {
-                sendToToken(fcmRequest, party.getLeader().getFcmToken());
+                fcmUtil.sendToToken(fcmRequest, party.getLeader().getFcmToken());
                 notificationRepository.save(
                         Notification.builder()
                                 .user(partyUser.getUser())
@@ -68,7 +68,7 @@ public class FcmService {
 
         for (PartyUser partyUser: party.getUsers()) {
             if (partyUser.getUser().getFcmToken() != null && !partyUser.getUser().getFcmToken().isEmpty()) {
-                sendToToken(fcmRequest, party.getLeader().getFcmToken());
+                fcmUtil.sendToToken(fcmRequest, party.getLeader().getFcmToken());
                 notificationRepository.save(
                         Notification.builder()
                                 .user(partyUser.getUser())
@@ -98,7 +98,7 @@ public class FcmService {
 
         for (PartyUser partyUser: party.getUsers()) {
             if (partyUser.getUser().getFcmToken() != null && !partyUser.getUser().getFcmToken().isEmpty()) {
-                sendToToken(fcmRequest, party.getLeader().getFcmToken());
+                fcmUtil.sendToToken(fcmRequest, party.getLeader().getFcmToken());
                 notificationRepository.save(
                         Notification.builder()
                                 .user(partyUser.getUser())
@@ -128,7 +128,7 @@ public class FcmService {
 
         for (PartyUser partyUser: party.getUsers()) {
             if (partyUser.getUser().getFcmToken() != null && !partyUser.getUser().getFcmToken().isEmpty()) {
-                sendToToken(fcmRequest, party.getLeader().getFcmToken());
+                fcmUtil.sendToToken(fcmRequest, party.getLeader().getFcmToken());
                 notificationRepository.save(
                         Notification.builder()
                                 .user(partyUser.getUser())
