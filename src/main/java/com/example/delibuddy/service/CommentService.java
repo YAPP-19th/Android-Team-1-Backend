@@ -45,8 +45,10 @@ public class CommentService {
             comment.setParent(parent);
         }
         commentRepository.save(comment);
+
         // Party party = partyRepository.getById(dto.getPartyId());
         // party.getComments().add(comment);
+
         return new CommentResponseDto(comment);
     }
 

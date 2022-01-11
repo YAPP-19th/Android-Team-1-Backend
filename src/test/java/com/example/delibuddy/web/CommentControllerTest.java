@@ -1,14 +1,17 @@
 package com.example.delibuddy.web;
 
+import com.example.delibuddy.domain.category.Category;
+import com.example.delibuddy.domain.category.CategoryRepository;
 import com.example.delibuddy.domain.comment.Comment;
 import com.example.delibuddy.domain.comment.CommentRepository;
 import com.example.delibuddy.domain.party.Party;
+import com.example.delibuddy.domain.party.PartyFactory;
 import com.example.delibuddy.domain.party.PartyRepository;
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
 import com.example.delibuddy.service.MyUserDetailsService;
 import com.example.delibuddy.web.dto.CommentCreationRequestDto;
-import com.example.delibuddy.web.dto.CommentResponseDto;
+import com.example.delibuddy.web.dto.PartyCreationRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +27,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,10 +56,15 @@ public class CommentControllerTest {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private PartyFactory partyFactory;
+
     private User user;
 
     private MockMvc mvc;
-
 
     @BeforeEach
     void setUp() {
@@ -76,11 +85,17 @@ public class CommentControllerTest {
                 .apply(springSecurity())
                 .build();
     }
+
     @Test
     public void 댓글이_등록된다() throws Exception {
-
         //given : 파티와 유저와 댓글 달 내용
-        Party party = partyRepository.save(Party.builder().build());
+        Category category = categoryRepository.save(new Category("hihi", "hi", "google.com", "FFFFFF"));
+        Party party = partyRepository.save(
+            partyFactory.createParty(
+                new PartyCreationRequestDto("test", "test", "", "", "", "POINT (1 1)", category.getId(), 5, LocalDateTime.now()),
+                this.user
+            )
+        );
 
         String body = "테스트 댓글";
         CommentCreationRequestDto requestDto = CommentCreationRequestDto.builder()

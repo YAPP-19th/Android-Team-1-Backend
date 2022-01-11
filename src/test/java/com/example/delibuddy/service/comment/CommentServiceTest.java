@@ -1,19 +1,25 @@
 package com.example.delibuddy.service.comment;
 
+import com.example.delibuddy.domain.category.Category;
+import com.example.delibuddy.domain.category.CategoryRepository;
 import com.example.delibuddy.domain.comment.Comment;
 import com.example.delibuddy.domain.comment.CommentRepository;
 import com.example.delibuddy.domain.party.Party;
+import com.example.delibuddy.domain.party.PartyFactory;
 import com.example.delibuddy.domain.party.PartyRepository;
 import com.example.delibuddy.domain.user.User;
 import com.example.delibuddy.domain.user.UserRepository;
 import com.example.delibuddy.service.CommentService;
 import com.example.delibuddy.web.dto.CommentCreationRequestDto;
 import com.example.delibuddy.web.dto.CommentResponseDto;
+import com.example.delibuddy.web.dto.PartyCreationRequestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -34,15 +40,27 @@ public class CommentServiceTest {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private PartyFactory partyFactory;
+
     @Test
     void 댓글을_등록할_수_있다(){
         //given : 파티와 유저와 댓글 달 내용
-        Party party = partyRepository.save(Party.builder().build());
+        Category category = categoryRepository.save(new Category("hihi", "hi", "google.com", "FFFFFF"));
         User writer = userRepository.save(
                 User.builder()
                         .nickName("test")
                         .kakaoId("test-kakao-id")
                         .build()
+        );
+        Party party = partyRepository.save(
+                partyFactory.createParty(
+                        new PartyCreationRequestDto("test", "test", "", "", "", "POINT (1 1)", category.getId(), 5, LocalDateTime.now()),
+                        writer
+                )
         );
 
         String body = "테스트 댓글";
@@ -65,12 +83,18 @@ public class CommentServiceTest {
     @Test
     void 대댓글을_등록할_수_있다(){
         //given : 파티, 유저, 부모 댓글과 댓글 달 내용
-        Party party = partyRepository.save(Party.builder().build());
+        Category category = categoryRepository.save(new Category("hihi", "hi", "google.com", "FFFFFF"));
         User writer = userRepository.save(
                 User.builder()
                         .nickName("test")
                         .kakaoId("test-kakao-id")
                         .build()
+        );
+        Party party = partyRepository.save(
+                partyFactory.createParty(
+                        new PartyCreationRequestDto("test", "test", "", "", "", "POINT (1 1)", category.getId(), 5, LocalDateTime.now()),
+                        writer
+                )
         );
         Comment parent = commentRepository.save(Comment.builder()
                         .body("테스트 부모 댓글")
