@@ -39,7 +39,7 @@ public class FcmService {
 
         for (PartyUser partyUser: party.getUsers()) {
             if (partyUser.getUser().getFcmToken() != null && !partyUser.getUser().getFcmToken().isEmpty()) {
-                fcmUtil.sendToToken(fcmRequest, party.getLeader().getFcmToken());
+                fcmUtil.sendToToken(fcmRequest, partyUser.getUser().getFcmToken());
                 notificationRepository.save(
                         Notification.builder()
                                 .user(partyUser.getUser())
@@ -68,7 +68,7 @@ public class FcmService {
 
         for (PartyUser partyUser: party.getUsers()) {
             if (partyUser.getUser().getFcmToken() != null && !partyUser.getUser().getFcmToken().isEmpty()) {
-                fcmUtil.sendToToken(fcmRequest, party.getLeader().getFcmToken());
+                fcmUtil.sendToToken(fcmRequest, partyUser.getUser().getFcmToken());
                 notificationRepository.save(
                         Notification.builder()
                                 .user(partyUser.getUser())
@@ -98,7 +98,7 @@ public class FcmService {
 
         for (PartyUser partyUser: party.getUsers()) {
             if (partyUser.getUser().getFcmToken() != null && !partyUser.getUser().getFcmToken().isEmpty()) {
-                fcmUtil.sendToToken(fcmRequest, party.getLeader().getFcmToken());
+                fcmUtil.sendToToken(fcmRequest, partyUser.getUser().getFcmToken());
                 notificationRepository.save(
                         Notification.builder()
                                 .user(partyUser.getUser())
@@ -128,7 +128,7 @@ public class FcmService {
 
         for (PartyUser partyUser: party.getUsers()) {
             if (partyUser.getUser().getFcmToken() != null && !partyUser.getUser().getFcmToken().isEmpty()) {
-                fcmUtil.sendToToken(fcmRequest, party.getLeader().getFcmToken());
+                fcmUtil.sendToToken(fcmRequest, partyUser.getUser().getFcmToken());
                 notificationRepository.save(
                         Notification.builder()
                                 .user(partyUser.getUser())
