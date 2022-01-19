@@ -137,6 +137,27 @@ class PartyServiceTest {
     }
 
     @Test
+    void 파티장은_탈퇴할_수_없다() {
+        // Given: party 와 user 생성, 파티에 입장. 그리고 강퇴
+        Category category = categoryRepository.save(new Category("HiCategory", "Hi", "google.com", "FFFFFF"));
+
+        User me = userRepository.save(
+                User.builder()
+                        .nickName("test")
+                        .kakaoId("test-kakao-id")
+                        .build()
+        );
+
+        PartyResponseDto partyResponseDto = partyService.create(
+                me.getKakaoId(),
+                new PartyCreationRequestDto("my party", "body", "", "", "", "POINT (1 1)", category.getId(), 5, LocalDateTime.now())
+        );
+
+        // Expect: IllegalArgumentException 이 터진다.
+        assertThrows(IllegalArgumentException.class, () -> partyService.leave(partyResponseDto.getId(), me.getKakaoId()));
+    }
+
+    @Test
     void 같은_파티에_2번_들어갈_수_없다() {
         // Given: 이미 파티에 들어감
         Party party = createParty();

@@ -110,6 +110,10 @@ public class PartyService {
             throw new IllegalArgumentException("가입되어 있지 않은 파티입니다.");
         }
 
+        if (party.getLeader().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("파티장은 탈퇴할 수 없습니다.");
+        }
+
         party.leave(partyUserRepository.findByPartyIdAndUserId(party.getId(), user.getId()).get());
         partyUserRepository.deleteByPartyIdAndUserId(party.getId(), user.getId());
     }
